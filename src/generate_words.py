@@ -9,7 +9,7 @@ PITCH = 1
 SPEED = .75 * 100
 LANG = "English"
 
-FILENAME = "list_words.txt"
+FILENAME = "data/list_words.txt"
 FOLDER = "home/nao/entrainment/words"
 
 
@@ -25,15 +25,16 @@ def configure_voice(tts, language, pitch, speed):
 #    tts.setVoice(
 
 
-def create_word_files(tts, list_words, folder):
+def create_word_files(tts, data, folder):
     """
     Use TTS to say the words to a file (internal in the robot)
     """
-    for word in list_words:
-        route = "/" + folder + "/" + word + "-base."
-        print("Word " + word + "\tin route: " + route)
-#        tts.sayToFile(word, route + "raw")
-        tts.sayToFile(word, route + "wav")
+    for category in data.keys():
+        for word_data in data[category]:
+            route = "/" + folder + "/" \
+                    + category + "-" + word_data.word + "-base."
+            print("Word " + word_data.word + "\tin route: " + route)
+            tts.sayToFile(word_data.pronunciation, route + "wav")
 
 
 def retrieve_word_files(folder):
@@ -63,11 +64,10 @@ def main():
     speed = SPEED
     language = LANG
 
-    list_words = parse_file(filename).get_all_words()
-    print(list_words)
+    word_data = parse_file(filename)
     tts = create_proxy("ALTextToSpeech", ip, port)
     configure_voice(tts, language, pitch, speed)
-    create_word_files(tts, list_words, folder)
+    create_word_files(tts, word_data.data, folder)
     retrieve_word_files(folder)
 
 

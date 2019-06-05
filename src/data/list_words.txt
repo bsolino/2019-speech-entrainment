@@ -1,0 +1,20 @@
+noun;   0;  boat;   a boat
+noun;   0;  dog;    a dog
+noun;   0;  cat
+noun;   0;  mouth
+noun;   0;  shoe;   a shoe
+noun;   0;  ship
+noun;   0;  ear
+noun;   1;  rope
+noun;   1;  brain
+noun;   1;  tin
+verb;   0;  eat;    to eat
+verb;   0;  read;   to read
+verb;   0;  walk;   to walk
+verb;   0;  dance;  to dance
+verb;   0;  drink;  I drink
+verb;   0;  swim;   to swim
+verb;   0;  wash;   to wash
+verb;   1;  dig;    to dig
+verb;   1;  lift;   to lift
+verb;   1;  pour;   to pour

@@ -13,7 +13,7 @@ PITCH = 1
 SPEED = 1
 LANG = "English"
 
-FILENAME = "list_words.txt"
+FILENAME_WORDS = "data/list_words.txt"
 FOLDER = "words"
 
 
@@ -32,7 +32,7 @@ def configure_voice(tts, language, pitch, speed):
 
 def main():
     # Parse properties
-    filename = FILENAME
+    f_words = FILENAME_WORDS
     folder = FOLDER
     ip = IP
     port = PORT
@@ -43,7 +43,8 @@ def main():
     tts = create_proxy("ALTextToSpeech", ip, port)
     configure_voice(tts, language, pitch, speed)
     
-    experiment_words = parse_file(filename)
+    experiment_words = parse_file(f_words)
+    
     
 
 
