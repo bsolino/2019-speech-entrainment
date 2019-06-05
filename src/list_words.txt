@@ -1,0 +1,20 @@
+nouns 0 boat
+nouns 0 dog
+nouns 0 cat
+nouns 0 mouth
+nouns 0 shoe
+nouns 0 ship
+nouns 0 ear
+nouns 1 rope
+nouns 1 brain
+nouns 1 tin
+verbs 0 eat
+verbs 0 read
+verbs 0 walk
+verbs 0 dance
+verbs 0 drink
+verbs 0 swim
+verbs 0 wash
+verbs 1 dig
+verbs 1 tear 'tE$r
+verbs 1 pour

@@ -1,30 +1,16 @@
 #!/usr/bin/env python2
 # -*- coding: UTF-8 -*-
 
-import paramiko
+#import paramiko
 from nao_utils import create_proxy, IP, PORT
-from word_list_utils import parse_word
+from word_list_utils import parse_file
 
 PITCH = 1
-SPEED = 1
+SPEED = .75 * 100
 LANG = "English"
 
 FILENAME = "list_words.txt"
-FOLDER = "words"
-
-
-def read_list(filename):
-    """
-    From a file, parse the words to say
-    """
-    with open("filename", "r") as f:
-        lines = f.readlines()
-        n_lines = len(lines)
-        list_words = [None] * n_lines
-        for i in range(n_lines):
-            line = lines[i]
-            list_words[i] = parse_word(line)
-        return list_words
+FOLDER = "home/nao/entrainment/words"
 
 
 def configure_voice(tts, language, pitch, speed):
@@ -44,15 +30,17 @@ def create_word_files(tts, list_words, folder):
     Use TTS to say the words to a file (internal in the robot)
     """
     for word in list_words:
-        route = "/" + folder + "/" + word
-        tts.sayToFile(word, route + ".raw")
-        tts.sayToFile(word, route + ".wav")  # TODO: Choose which one
+        route = "/" + folder + "/" + word + "-base."
+        print("Word " + word + "\tin route: " + route)
+#        tts.sayToFile(word, route + "raw")
+        tts.sayToFile(word, route + "wav")
 
 
 def retrieve_word_files(folder):
     """
     Copy files from robot's internal storage to the physical computer
     """
+    pass  # TODO?
 #    import os
 #    import paramiko
 #    
@@ -75,7 +63,8 @@ def main():
     speed = SPEED
     language = LANG
 
-    list_words = read_list(filename)
+    list_words = parse_file(filename).get_all_words()
+    print(list_words)
     tts = create_proxy("ALTextToSpeech", ip, port)
     configure_voice(tts, language, pitch, speed)
     create_word_files(tts, list_words, folder)
