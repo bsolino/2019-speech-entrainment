@@ -8,6 +8,10 @@ Created on Wed Jun  5 02:28:02 2019
 
 from distutils.util import strtobool
 
+
+WORDS_FILE = "data/list_words.txt"
+
+
 class WordInfo:
     
     def __init__(self, word, is_target, category, pronunciation):
@@ -18,7 +22,7 @@ class WordInfo:
 
 
     def __repr__(self):
-        return self.word + ": " + str(self.is_target) + "; " + self.pronunciation
+        return self.word + ": " + str(self.is_target)
 
 
 class ExperimentWords:
@@ -80,4 +84,4 @@ def parse_file(filename):
             word_info = parse_word_info(line)
             add_word(data, word_info)
         print(data)
-        return ExperimentWords(data)
+    return ExperimentWords(data)

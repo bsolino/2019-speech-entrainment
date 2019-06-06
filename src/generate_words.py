@@ -3,13 +3,12 @@
 
 #import paramiko
 from nao_utils import create_proxy, IP, PORT
-from word_list_utils import parse_file
+from word_list_utils import parse_file, WORDS_FILE
 
 PITCH = 1
 SPEED = .75 * 100
 LANG = "English"
 
-FILENAME = "data/list_words.txt"
 FOLDER = "home/nao/entrainment/words"
 
 
@@ -56,7 +55,7 @@ def retrieve_word_files(folder):
 
 def main():
     # Parse properties
-    filename = FILENAME
+    filename = WORDS_FILE
     folder = FOLDER
     ip = IP
     port = PORT

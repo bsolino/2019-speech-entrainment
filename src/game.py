@@ -7,13 +7,14 @@ Created on Wed Jun  5 02:48:37 2019
 """
 
 from nao_utils import create_proxy, IP, PORT
-from word_list_utils import parse_file
+#from word_list_utils import parse_file
+from game_utils import read_task_lists
 
 PITCH = 1
-SPEED = 1
+SPEED = .75 * 100
 LANG = "English"
 
-FILENAME_WORDS = "data/list_words.txt"
+FILENAME_TASKS = "data/tasks/selected_tasks.txt"
 FOLDER = "words"
 
 
@@ -29,10 +30,47 @@ def configure_voice(tts, language, pitch, speed):
 #    tts.setVoice(
 
 
+def wait_for_kid():
+    raw_input("Press ENTER to continue") # Temporal solution
+    
+    
+def find_word_file(word, folder):
+    """
+    Obtains the route to the word file from the word
+    """
+    # TODO Improve to be able to select specific frequencies
+    return folder + "/{}-base.wav".format(folder) # TODO Adjust 
+
+
+def say_word(word, tts, folder):
+    word_file = find_word_file(word)
+    tts.say("\\audio=\"{}\"\\".format(word_file))
+
+
+def execute_task(task, tts, folder):
+    """
+    Plays the game: waits for kind input and then says translation
+    """
+    for word in task.word_order:
+        wait_for_kid()
+        say_word(word, tts, folder)
+
+
+def execute_tasks(list_tasks, tts, folder):
+    n_tasks = len(list_tasks)
+    for i in range(n_tasks):
+        task = list_tasks[i]
+        print("Starting task {}/{}; category: {}".format(
+                i+1, n_tasks, task.category))
+        raw_input("Press ENTER to continue")
+        
+        execute_task(task, tts. folder)
+        
+        print("Finished task {}/{}".format(i+1, n_tasks))
 
 def main():
     # Parse properties
-    f_words = FILENAME_WORDS
+    f_tasks = FILENAME_TASKS
     folder = FOLDER
     ip = IP
     port = PORT
@@ -43,7 +81,8 @@ def main():
     tts = create_proxy("ALTextToSpeech", ip, port)
     configure_voice(tts, language, pitch, speed)
     
-    experiment_words = parse_file(f_words)
+    list_tasks = read_task_lists(f_tasks)
+    execute_tasks(list_tasks, tts, folder)
     
     
 
