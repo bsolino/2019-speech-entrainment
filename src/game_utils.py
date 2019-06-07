@@ -94,8 +94,12 @@ def parse_task_line(line):
 def read_task_lists(filename):
     with open(filename, "r") as f:
         lines = f.readlines()
-        task_lists = dict()
-        
+        task_list = list()
+        for line in lines:
+            task = parse_task_line(line)
+            task_list.append(task)
+    return task_list
+
 
 def main():
     words_file = WORDS_FILE

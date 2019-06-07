@@ -31,9 +31,9 @@ def create_word_files(tts, data, folder):
     for category in data.keys():
         for word_data in data[category]:
             route = "/" + folder + "/" \
-                    + category + "-" + word_data.word + "-base."
+                    + category + "-" + word_data.word + "-base.wav"
             print("Word " + word_data.word + "\tin route: " + route)
-            tts.sayToFile(word_data.pronunciation, route + "wav")
+            tts.sayToFile(word_data.pronunciation, route)
 
 
 def retrieve_word_files(folder):
