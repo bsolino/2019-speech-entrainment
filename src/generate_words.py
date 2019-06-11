@@ -9,7 +9,11 @@ PITCH = 1
 SPEED = .75 * 100
 LANG = "English"
 
-FOLDER = "home/nao/entrainment/words"
+#FOLDER = "home/nao/entrainment/words"
+#WORD_TYPE = "base"
+FOLDER = "home/nao/entrainment/words/practice"
+WORD_TYPE = "practice"
+WORDS_FILE = "data/list_practice_words.txt"
 
 
 def configure_voice(tts, language, pitch, speed):
@@ -31,7 +35,7 @@ def create_word_files(tts, data, folder):
     for category in data.keys():
         for word_data in data[category]:
             route = "/" + folder + "/" \
-                    + category + "-" + word_data.word + "-base.wav"
+                    + category + "-" + word_data.word + "-" + WORD_TYPE + ".wav"
             print("Word " + word_data.word + "\tin route: " + route)
             tts.sayToFile(word_data.pronunciation, route)
 

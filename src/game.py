@@ -16,8 +16,11 @@ SPEED = .75 * 100
 LANG = "English"
 
 FILENAME_TASKS = os.path.join("data", "tasks", "selected_tasks.txt")
-FOLDER = "/home/nao/entrainment/words"
+WORDS_FOLDER = "/home/nao/entrainment/words"
 
+
+
+# CONFIGURATION
 
 def configure_voice(tts, language, pitch, speed):
     """
@@ -31,56 +34,90 @@ def configure_voice(tts, language, pitch, speed):
 #    tts.setVoice(
 
 
+# UTILS
+
+def find_word_file(word, words_folder):
+    """
+    Obtains the route to the word file from the word
+    """
+    # TODO Improve to be able to select specific frequencies
+    return "{}/{}-base.wav".format(words_folder, word) # TODO Adjust 
+
+
+# ACTIONS
+
 def wait_for_kid(word = ""):
     if word:
         msg = "word: \"{}\"".format(word)
     else:
         msg = "utterance"
     raw_input("Waiting for {}. Press ENTER to continue".format(msg)) # Temporal solution
-    
-    
-def find_word_file(word, folder):
-    """
-    Obtains the route to the word file from the word
-    """
-    # TODO Improve to be able to select specific frequencies
-    return "{}/{}-base.wav".format(folder, word) # TODO Adjust 
 
 
-def say_word(word, tts, folder):
-    word_file = find_word_file(word, folder)
+def say_file(filename, tts, folder):
+    word_file = find_word_file(filename, folder)
     print(word_file)
     tts.say("\\audio=\"{}\"\\".format(word_file))
-    #aup = create_proxy("ALAudioPlayer")
-    #aup.post.playFile("/usr/share/naoqi/wav/filename.wav")
 
 
-def execute_task(task, tts, folder):
+def play_file(filename, aup, folder):
+    word_file = find_word_file(filename, folder)
+    print(word_file)
+    aup.post.playFile(word_file)
+
+
+# ROBOT UTTERANCES
+    
+def speak_start_experiment(tts, aup):
+    pass #TODO
+
+def speak_before_task(tts, aup, i):
+    pass #TODO
+
+def speak_after_task(tts, aup, i):
+    pass #TODO
+    
+def speak_finish_experiment(tts, aup):
+    pass #TODO
+# TASKS
+
+def execute_task(task, tts, aup, words_folder):
     """
     Plays the game: waits for kind input and then says translation
     """
     for word in task.word_order:
         wait_for_kid(word)
-        say_word(word, tts, folder)
+#        say_file(word, tts, words_folder)
+        play_file(word, aup, words_folder)
 
 
-def execute_tasks(list_tasks, tts, folder):
+def execute_tasks(list_tasks, tts, aup, words_folder):
     n_tasks = len(list_tasks)
+    
+    speak_start_experiment(tts, aup)
+    
     for i in range(n_tasks):
 
+        
         task = list_tasks[i]
         print("Starting task {}/{}; category: {}".format(
                 i+1, n_tasks, task.category))
         raw_input("Press ENTER to continue")
+
+        speak_before_task(tts, aup, i)
         
-        execute_task(task, tts, folder)
+        execute_task(task, tts, aup, words_folder)
         
         print("Finished task {}/{}".format(i+1, n_tasks))
+        
+        speak_after_task(tts, aup, i)
+    speak_finish_experiment(tts, aup)
+
 
 def main():
     # Parse properties
     f_tasks = FILENAME_TASKS
-    folder = FOLDER
+    words_folder = WORDS_FOLDER
     ip = IP
     port = PORT
     pitch = PITCH
@@ -90,8 +127,10 @@ def main():
     tts = create_proxy("ALTextToSpeech", ip, port)
     configure_voice(tts, language, pitch, speed)
     
+    aup = create_proxy("ALAudioPlayer", ip, port)
+    
     list_tasks = read_task_lists(f_tasks)
-    execute_tasks(list_tasks, tts, folder)
+    execute_tasks(list_tasks, tts, aup, words_folder)
     
     
 
