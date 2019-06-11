@@ -3,8 +3,8 @@
 
 from naoqi import ALProxy
 
-#IP = "192.168.0.199"
-IP = "192.168.0.197"
+IP = "192.168.0.199"
+#IP = "192.168.0.197"
 PORT = 9559
 
 def create_proxy(proxy_name, ip = IP, port = PORT):
