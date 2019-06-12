@@ -9,7 +9,7 @@ Created on Wed Jun  5 02:48:37 2019
 import os
 from nao_utils import create_proxy, IP, PORT
 #from word_list_utils import parse_file
-from game_utils import read_task_lists
+from task_utils import read_task_lists
 
 PITCH = 1
 SPEED = .75 * 100
@@ -79,6 +79,8 @@ def speak_after_task(tts, aup, i):
     
 def speak_finish_experiment(tts, aup):
     pass #TODO
+
+
 # TASKS
 
 def execute_task(task, tts, aup, words_folder):
