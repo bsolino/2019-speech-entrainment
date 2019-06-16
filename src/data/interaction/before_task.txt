@@ -1,0 +1,24 @@
+"Je mag de eerste stapel kaarten pakken."
+"Laten we beginnen!"
+
+"Nu gebruiken we de tweede stapel."
+"Pak hem maar, alsjeblieft."
+(small pause)
+"Ben je er klaar voor?"
+(wait for response)
+"Oke, daar gaan we!"
+
+"Nu gaan we naar de volgende ronde."
+"Pak de derde stapel alsjeblieft."
+(small pause)
+"Ben je klaar om te spelen?"
+(wait for response)
+"Oke!"
+"Hier gaan we."
+
+"Tijd voor de laatste ronde."
+"Pak de vierde stapel, alsjeblieft."
+(small pause)
+"Ben je klaar om te spelen?"
+(wait for response)
+"Oke! Daar gaan we."

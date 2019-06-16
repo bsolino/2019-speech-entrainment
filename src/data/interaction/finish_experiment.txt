@@ -1,0 +1,6 @@
+"Ik vond het leuk om met jou te spelen."
+"Vond jij dat ook?"
+(wait for response)
+"Dit was alweer het laatste spel."
+"Bedankt voor het spelen, en tot de volgende keer."
+"Doei!"

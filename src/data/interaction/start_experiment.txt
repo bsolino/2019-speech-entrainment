@@ -1,0 +1,21 @@
+"Hallo."
+"Ik ben Robin."
+(wait for response)
+
+"Leuk om jou te zien."
+"Ik houd van spelletjes."
+"Wat vind jij het leukste spel?"
+(wait for response)
+
+"Dat vind ik ook leuk!"
+(small pause)
+
+"Ik heb zelf ook een spel meegenomen."
+"Met mijn spel kunnen we Engelse woorden oefenen."
+"Laten we dat gaan spelen!"
+(small pause)
+
+"Ben je klaar om te beginnen?"
+(wait for response)
+
+"Oke!"
