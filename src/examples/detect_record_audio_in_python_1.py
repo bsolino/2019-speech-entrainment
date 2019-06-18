@@ -108,8 +108,8 @@ def record():
     stream.close()
     p.terminate()
 
-    r = normalize(r)
     r = trim(r)
+    r = normalize(r)
     r = add_silence(r, 0.5)
     return sample_width, r
 
