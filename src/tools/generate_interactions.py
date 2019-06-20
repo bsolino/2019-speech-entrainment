@@ -6,15 +6,18 @@ Created on Sun Jun 16 22:26:57 2019
 @author: breixo
 """
 
-import os
+from os import listdir
+from os.path import join, isfile, isdir, basename
 from nao_utils import create_proxy, IP, PORT
 
 PITCH = 1
-SPEED = .75 * 100
-LANG = "English"
+#SPEED = .75 * 100
+SPEED = 1 * 100
+LANG = "Dutch"
 
-NAO_FOLDER = "/home/nao/entrainment/interactions"
-INTERACTIONS_FOLDER = "data/interaction"
+NAO_FOLDER = "/home/nao/entrainment/interactions_s{:0>3d}_p{:.2f}/base".format(
+        SPEED, PITCH)
+INTERACTIONS_FOLDER = join("data", "interaction")
 
 VERBOSE = True
 
@@ -27,14 +30,14 @@ class Sentence:
     
     
     def get_route(self):
-        name = "{}-base.wav".format(self.number)
-        return os.path.join(self.category, name)
+        name = "{:0>2d}-base.wav".format(self.number)
+        return join(self.category, name)
     
     def say_to_file(self, tts, destination_folder):
         """
         Use TTS to say the words to a file (internal in the robot)
         """
-        route = os.path.join(destination_folder, self.get_route())
+        route = join(destination_folder, self.get_route())
         if VERBOSE:
             print(self)
         tts.sayToFile(self.text, route)
@@ -57,7 +60,7 @@ def configure_voice(tts, language, pitch, speed):
 
 
 def parse_category(filename):
-    aux = os.path.basename(filename)
+    aux = basename(filename)
     return aux[:aux.find(".")].lower().strip()
 
 
@@ -75,20 +78,20 @@ def parse_sentences_file(filename):
         sentences_list = list()
         counter = 0
         for line in lines:
-            text = parse_sentence_text(line, category, counter)
+            text = parse_sentence_text(line)
             if text:
+                counter += 1
                 sentence = Sentence(category, counter, text)
                 sentences_list.append(sentence)
-                counter += 1
                 if VERBOSE:
                     print(sentence)
         return sentences_list
 
 
 def parse_interactions_folder(path):
-    assert os.path.isdir(path)
-    files = [os.path.join(path, f) for f in os.listdir(path)
-            if os.path.isfile(os.path.join(path, f))]
+    assert isdir(path)
+    files = [join(path, f) for f in listdir(path)
+            if isfile(join(path, f))]
     return files
 
 
