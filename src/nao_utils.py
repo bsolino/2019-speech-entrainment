@@ -24,9 +24,11 @@ def create_proxy(proxy_name, ip = IP, port = PORT):
     
 def crouch():
     motion = create_proxy("ALMotion")
-    posture = create_proxy("ALRobotPosture")
     motion.setBreathEnabled("Body", False)
+    posture = create_proxy("ALRobotPosture")
     posture.goToPosture("Crouch", 0.5)
+    #TODO This makes the robot hot --> turn off motors?
+    
 
 def regain_connection():
     mem = create_proxy("ALMemory")
