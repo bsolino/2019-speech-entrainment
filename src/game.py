@@ -10,11 +10,12 @@ import os
 from nao_utils import create_proxy, IP, PORT
 #from word_list_utils import parse_file
 from task_utils import read_task_lists
+from time import sleep
 
 FILENAME_TASKS = os.path.join("data", "tasks", "selected_tasks.txt")
 NAO_FOLDER = "/home/nao/entrainment"
-WORDS_FOLDER = os.path.join(NAO_FOLDER, "words")
-INTERACTIONS_FOLDER = os.path.join(NAO_FOLDER, "interactions")
+WORDS_FOLDER = NAO_FOLDER + "/words"
+INTERACTIONS_FOLDER = NAO_FOLDER + "/interactions_s100_p1.00"
 
 
 
@@ -45,18 +46,61 @@ def play_file(filename, aup, folder):
 
 
 # ROBOT UTTERANCES
-    
+
+def execute_interaction(script, aup, folder, start_point = 0):
+    i = start_point
+    for action in script:
+        if type(action) is int:
+            n_sentences = action
+            i += 1
+            for i in range(i, i + n_sentences):
+                aup.playFile(folder + "/{:0>2d}-base.wav".format(i))
+        elif action == "wait":
+            wait_for_kid()
+        elif action == "pause":
+            sleep(1)  # TODO? Add variation?
+
+
+def find_start_interaction(scripts, n_interaction):
+    start_point = 0
+    for i in range(n_interaction):
+        for action in scripts[i]:
+            if action is int:
+                start_point += action
+    return start_point
+
+
 def speak_start_experiment(aup):
-    pass #TODO
+    folder = INTERACTIONS_FOLDER + "/base/start_experiment"
+    script = [2, "wait", 3, "wait", 1, "pause", 3, "pause", 1, "wait", 1]
+    execute_interaction(script, aup, folder)
 
-def speak_before_task(aup, i):
-    pass #TODO
 
-def speak_after_task(aup, i):
-    pass #TODO
-    
+def speak_before_task(aup, n_interaction):
+    folder = INTERACTIONS_FOLDER + "/base/before_task"
+    scripts = [
+            [2],
+            [2, "pause", 1, "wait", 1],
+            [2, "pause", 1, "wait", 2],
+            [2, "pause", 1, "wait", 1]
+            ]
+    start_point = find_start_interaction(scripts, n_interaction)
+    script = scripts[n_interaction]
+    execute_interaction(script, aup, folder, start_point)
+
+
+def speak_after_task(aup, n_interaction):
+    folder = INTERACTIONS_FOLDER + "/base/after_task"
+    scripts = [[1], [1], [1], [1]]
+    start_point = find_start_interaction(scripts, n_interaction)
+    script = scripts[n_interaction]
+    execute_interaction(script, aup, folder, start_point)
+
+
 def speak_finish_experiment(aup):
-    pass #TODO
+    folder = INTERACTIONS_FOLDER + "/base/finish_experiment"
+    script = [2, "wait", 3]
+    execute_interaction(script, aup, folder)
 
 
 # TASKS
