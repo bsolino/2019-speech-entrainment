@@ -23,7 +23,24 @@ EXTRACT_PRAAT_SCRIPT = join(PRAAT_SCRIPT_PATH, "extract_features.praat")
 SCRIPT_PITCH_OPTION = ["0", "1", "0", "0"]
 PRAAT_LOCATION = "praat"
 
+def call_praat(script, args = None):
+    praat_call = [
+            PRAAT_LOCATION,
+            "--run"
+            ]
+    praat_call.append(script)
+    if args:
+        try:
+            praat_call.extend(args)
+        except:
+            praat_call.append(args)
+    
+    result = call(praat_call)
+    assert (result == 0)
 
+def adapt():
+    pass # TODO
+    
 def parse_feature_line(line):
     key, value = line.strip().split(",")
     return {key : float(value)}
@@ -38,22 +55,24 @@ def parse_features(return_file):
         features.update(feature)
     return features
 
-def extract_features(sound_file, return_file = None):
-    sound_file = abspath(sound_file)
-    
-    if not return_file:
+def extract_features(
+        sound_file,
         return_file = join("return", "tmp", "extract_features.tmp")
+        ):
+    sound_file = abspath(sound_file)
     return_file = abspath(return_file)
     
-    praat_call = [
-            PRAAT_LOCATION,
-            "--run",
-            EXTRACT_PRAAT_SCRIPT,
-            sound_file,
-            return_file
-            ] + SCRIPT_PITCH_OPTION
-    result = call(praat_call)
-    assert (result == 0)  # Check that the script worked
+#    praat_call = [
+#            PRAAT_LOCATION,
+#            "--run",
+#            EXTRACT_PRAAT_SCRIPT,
+#            sound_file,
+#            return_file
+#            ] + SCRIPT_PITCH_OPTION
+#    result = call(praat_call)
+#    assert (result == 0)  # Check that the script worked
+    args = [sound_file, return_file] + SCRIPT_PITCH_OPTION
+    call_praat(EXTRACT_PRAAT_SCRIPT, args)
     features = parse_features(return_file)
     return features
 
