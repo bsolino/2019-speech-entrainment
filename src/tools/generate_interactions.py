@@ -10,7 +10,7 @@ from os import listdir
 from os.path import join, isfile, isdir, basename
 from nao_utils import create_proxy, IP, PORT
 
-PITCH = 1
+PITCH = 1.15
 #SPEED = .75 * 100
 SPEED = 1 * 100
 LANG = "Dutch"

@@ -15,7 +15,7 @@ from time import sleep
 FILENAME_TASKS = os.path.join("data", "tasks", "selected_tasks.txt")
 NAO_FOLDER = "/home/nao/entrainment"
 WORDS_FOLDER = NAO_FOLDER + "/words"
-INTERACTIONS_FOLDER = NAO_FOLDER + "/interactions_s100_p1.00"
+INTERACTIONS_FOLDER = NAO_FOLDER + "/interactions_s100_p1.15"
 
 
 
@@ -65,7 +65,7 @@ def find_start_interaction(scripts, n_interaction):
     start_point = 0
     for i in range(n_interaction):
         for action in scripts[i]:
-            if action is int:
+            if type(action) is int:
                 start_point += action
     return start_point
 
@@ -132,7 +132,7 @@ def execute_tasks(list_tasks, aup, words_folder):
         execute_task(task, aup, words_folder)
         
         print("Finished task {}/{}".format(i+1, n_tasks))
-        
+        raw_input("Press ENTER to finish task")
         speak_after_task(aup, i)
     speak_finish_experiment(aup)
 
