@@ -21,6 +21,7 @@ import copy
 import pyaudio
 import wave
 import numpy as np
+from time import sleep
 
 THRESHOLD = 107  # audio levels not normalised. # TODO Adjust value
 RATE = 44100
@@ -116,7 +117,7 @@ def trim(data_all):
 
     return copy.deepcopy(data_all[_from:(_to + 1)])
 
-def record():
+def record_automatic():
     """Record a word or words from the microphone and 
     return the data as an array of signed shorts."""
 
@@ -140,6 +141,7 @@ def record():
         if byteorder == 'big':
             data_chunk.byteswap()
         data_all.extend(data_chunk)
+        
 
         silent = is_silent(data_chunk)
 
@@ -179,9 +181,65 @@ def record():
     data_all = normalize(data_all)
     return sample_width, data_all
 
-def record_to_file(path):
+def record_manual():
+    """
+    Record a word or words from the microphone and 
+    return the data as an array of signed shorts.
+    """
+
+    stop = False
+    data_all = array('h')
+    def _callback_record(
+            in_data,            # recorded data if input=True; else None
+            frame_count,        # number of frames
+            time_info,          # dictionary
+            status_flags        # PaCallbackFlags:
+            ):
+        data_chunk = array('h', in_data)
+        if byteorder == 'big':
+            data_chunk.byteswap()
+        data_all.extend(data_chunk)
+        
+        if stop:
+            callback_flag = pyaudio.paComplete
+        else:
+            callback_flag = pyaudio.paContinue
+        
+        return in_data, callback_flag
+
+    p = pyaudio.PyAudio()
+    stream = p.open(
+            format=FORMAT,
+            channels=CHANNELS,
+            rate=RATE,
+            input=True,
+            output=True,
+            frames_per_buffer=CHUNK_SIZE,
+            stream_callback=_callback_record
+            )
+
+    stream.start_stream()
+    
+    raw_input("Press ENTER to stop recording")
+    stop = True
+    
+#    while stream.is_active():
+#        print("Still active")
+#        sleep(0.01)
+
+
+    sample_width = p.get_sample_size(FORMAT)
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+
+    data_all = trim(data_all)  # we trim before normalize as threshhold applies to un-normalized wave (as well as is_silent() function)
+    
+    data_all = normalize(data_all)
+    return sample_width, data_all
+
+def record_to_file(path, data, sample_width):
     "Records from the microphone and outputs the resulting data to 'path'"
-    sample_width, data = record()
     data = pack('<' + ('h' * len(data)), *data)
 
     wave_file = wave.open(path, 'wb')
@@ -191,7 +249,3 @@ def record_to_file(path):
     wave_file.writeframes(data)
     wave_file.close()
 
-if __name__ == '__main__':
-    print("Wait in silence to begin recording; wait in silence to terminate")
-    record_to_file('demo.wav')
-    print("done - result written to demo.wav")
