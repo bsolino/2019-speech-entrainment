@@ -21,11 +21,12 @@ from distutils.util import strtobool
 FILENAME_TASKS = join("data", "tasks", "selected_tasks.txt")
 PARTICIPANTS_DATA_FOLDER = abspath(join(pardir, "participant_data"))
 NAO_FOLDER = "/home/nao/entrainment"
-WORDS_FOLDER = NAO_FOLDER + "/words/experiment"
+WORDS_FOLDER = NAO_FOLDER + "/words_s075_p1.00/experiment"
 INTERACTIONS_FOLDER = NAO_FOLDER + "/interactions_s100_p1.15"
 
 MIN_PITCH = 130
 MAX_PITCH = 350
+ROUND_STEP = 5
 
 # CONFIGURATION
 participant_id = None
@@ -40,8 +41,8 @@ def find_word_file(word, words_folder, target_pitch):
     Obtains the route to the word file from the word
     """
     if not entrainment:
-       target_pitch = ""
-    return "{}/{}-base{}.wav".format(words_folder, word, target_pitch)
+       target_pitch = "base"
+    return "{}/{}-1{}.wav".format(words_folder, word, target_pitch)
     
 
 
@@ -69,7 +70,7 @@ def analyze_audio_data(base_path, audio_data, sample_width):
 
 
 def round_and_bound_pitch(x):
-    base = 5
+    base = ROUND_STEP
     value = int(base * round(float(x)/base))
     ret = max(MIN_PITCH, min(MAX_PITCH, value))
     print("Original value = {}; Rounded = {}; returns = {}".format(x, value, ret))
