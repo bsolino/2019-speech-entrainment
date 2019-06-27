@@ -1,4 +1,4 @@
 verb:[dance: False, wash: False, eat: False, drink: False, pour: True, dig: True, swim: False, read: False, walk: False, lift: True]
-verb:[pour: True, dance: False, read: False, dig: True, lift: True, swim: False, walk: False, drink: False, eat: False, wash: False]
 noun:[brain: True, mouth: False, ear: False, cat: False, shoe: False, ship: False, boat: False, dog: False, tin: True, rope: True]
+verb:[pour: True, dance: False, read: False, dig: True, lift: True, swim: False, walk: False, drink: False, eat: False, wash: False]
 noun:[brain: True, cat: False, ear: False, rope: True, ship: False, tin: True, shoe: False, dog: False, mouth: False, boat: False]
