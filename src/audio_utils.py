@@ -18,24 +18,49 @@ from array import array
 from struct import pack
 from sys import byteorder
 import copy
-import pyaudio
+from pyaudio import PyAudio, paInt16, paComplete, paContinue
 import wave
 import numpy as np
-from time import sleep
 
 THRESHOLD = 107  # audio levels not normalised. # TODO Adjust value
 RATE = 44100
 CHUNK_SIZE = 1024
 SILENT_CHUNKS = 1 * RATE // CHUNK_SIZE
-FORMAT = pyaudio.paInt16
+FORMAT = paInt16
 FRAME_MAX_VALUE = 2 ** 15 - 1
 NORMALIZE_MINUS_ONE_dB = 10 ** (-1.0 / 20)
 CHANNELS = 1
 TRIM_APPEND = RATE / 4
 
 
+
+
+
+
+"""
+To
+"""
+from ctypes import CFUNCTYPE, c_char_p, c_int, cdll
+from contextlib import contextmanager
+ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int, c_char_p)
+
+def py_error_handler(filename, line, function, err, fmt):
+    pass
+
+c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
+
+@contextmanager
+def noalsaerr():
+    asound = cdll.LoadLibrary('libasound.so')
+    asound.snd_lib_error_set_handler(c_error_handler)
+    yield
+    asound.snd_lib_error_set_handler(None)
+
+
+
 def find_threshold():
-    p = pyaudio.PyAudio()
+    with noalsaerr():
+        p = PyAudio()
     stream = p.open(
             format=FORMAT,
             channels=CHANNELS,
@@ -111,17 +136,19 @@ def trim(data_all):
 
     for i, b in enumerate(reversed(data_all)):
         if abs(b) > THRESHOLD:
-#            _to = min(len(data_all) - 1, len(data_all) - 1 - i + TRIM_APPEND)
-            _to = min(len(data_all) - 1, len(data_all) - 1 - i + TRIM_APPEND*2)  # Leave time for the sound to die
+            _to = min(len(data_all) - 1, len(data_all) - 1 - i + TRIM_APPEND)
+#            _to = min(len(data_all) - 1, len(data_all) - 1 - i + TRIM_APPEND*2)  # Leave time for the sound to die
             break
 
     return copy.deepcopy(data_all[_from:(_to + 1)])
+
 
 def record_automatic():
     """Record a word or words from the microphone and 
     return the data as an array of signed shorts."""
 
-    p = pyaudio.PyAudio()
+    with noalsaerr():
+        p = PyAudio()
     stream = p.open(
             format=FORMAT,
             channels=CHANNELS,
@@ -201,13 +228,14 @@ def record_manual():
         data_all.extend(data_chunk)
         
         if stop:
-            callback_flag = pyaudio.paComplete
+            callback_flag = paComplete
         else:
-            callback_flag = pyaudio.paContinue
+            callback_flag = paContinue
         
         return in_data, callback_flag
 
-    p = pyaudio.PyAudio()
+    with noalsaerr():
+        p = PyAudio()
     stream = p.open(
             format=FORMAT,
             channels=CHANNELS,
