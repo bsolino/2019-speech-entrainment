@@ -21,7 +21,7 @@ from distutils.util import strtobool
 FILENAME_TASKS = join("data", "tasks", "selected_tasks.txt")
 PARTICIPANTS_DATA_FOLDER = abspath(join(pardir, "participant_data"))
 NAO_FOLDER = "/home/nao/entrainment"
-WORDS_FOLDER = NAO_FOLDER + "/words"
+WORDS_FOLDER = NAO_FOLDER + "/words/experiment"
 INTERACTIONS_FOLDER = NAO_FOLDER + "/interactions_s100_p1.15"
 
 MIN_PITCH = 130
@@ -107,10 +107,11 @@ def execute_interaction(script, aup, folder, start_point = 0):
             i += 1
             for i in range(i, i + n_sentences):
                 aup.playFile(folder + "/{:0>2d}-base.wav".format(i))
+                sleep(0.7)
         elif action == "wait":
             wait_for_kid()
         elif action == "pause":
-            sleep(1)  # TODO? Add variation?
+            sleep(0.7)  # TODO? Add variation?
 
 
 def find_start_interaction(scripts, n_interaction):
@@ -131,10 +132,10 @@ def speak_start_experiment(aup):
 def speak_before_task(aup, n_interaction):
     folder = INTERACTIONS_FOLDER + "/base/before_task"
     scripts = [
-            [2],
-            [2, "pause", 1, "wait", 1],
-            [2, "pause", 1, "wait", 2],
-            [2, "pause", 1, "wait", 1]
+            [2, "wait"],
+            [2, "pause", 1, "wait", 1, "wait"],
+            [2, "pause", 1, "wait", 2, "wait"],
+            [2, "pause", 1, "wait", 1, "wait"]
             ]
     start_point = find_start_interaction(scripts, n_interaction)
     script = scripts[n_interaction]
@@ -283,7 +284,7 @@ def main():
     
     set_configuration(p_data_folder)
 
-#    aup = create_proxy("ALAudioPlayer", ip, port)
+    aup = create_proxy("ALAudioPlayer", ip, port)
     
     class MockAup:
         class post:
