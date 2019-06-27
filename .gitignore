@@ -103,5 +103,19 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+###########
+# MY FILES
+###########
+
 # external praat scripts
 /misc/
+
+# data and resourcesq
+/resources/
+/participant_data/
+
+# test files
+/src/return
+
+# sound files
+*.wav
