@@ -38,12 +38,24 @@ def call_praat(script, args = None):
     result = call(praat_call)
     assert (result == 0)
 
+
 def adapt():
     pass # TODO
-    
+
+
 def parse_feature_line(line):
     key, value = line.strip().split(",")
-    return {key : float(value)}
+    return key, float(value)
+
+
+def parse_mean_pitch(return_file):
+    with open(return_file, "r") as f:
+        lines = f.readlines()
+    for line in lines:
+        feature, value = parse_feature_line(line)
+        if feature == "pitch_mean":
+            return value
+    raise KeyError("pitch_mean not found in file {}".format(return_file))
 
 
 def parse_features(return_file):
@@ -51,14 +63,12 @@ def parse_features(return_file):
         lines = f.readlines()
     features = dict()
     for line in lines:
-        feature = parse_feature_line(line)
-        features.update(feature)
+        key, value = parse_feature_line(line)
+        features[key] = value
     return features
 
-def extract_features(
-        sound_file,
-        return_file = join("return", "tmp", "extract_features.tmp")
-        ):
+
+def extract_features(sound_file, return_file):
     sound_file = abspath(sound_file)
     return_file = abspath(return_file)
     
@@ -73,6 +83,4 @@ def extract_features(
 #    assert (result == 0)  # Check that the script worked
     args = [sound_file, return_file] + SCRIPT_PITCH_OPTION
     call_praat(EXTRACT_PRAAT_SCRIPT, args)
-    features = parse_features(return_file)
-    return features
 
