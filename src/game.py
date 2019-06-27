@@ -21,11 +21,12 @@ from distutils.util import strtobool
 FILENAME_TASKS = join("data", "tasks", "selected_tasks.txt")
 PARTICIPANTS_DATA_FOLDER = abspath(join(pardir, "participant_data"))
 NAO_FOLDER = "/home/nao/entrainment"
-WORDS_FOLDER = NAO_FOLDER + "/words"
+WORDS_FOLDER = NAO_FOLDER + "/words_s075_p1.00/experiment"
 INTERACTIONS_FOLDER = NAO_FOLDER + "/interactions_s100_p1.15"
 
 MIN_PITCH = 130
 MAX_PITCH = 350
+ROUND_STEP = 5
 
 # CONFIGURATION
 participant_id = None
@@ -40,8 +41,8 @@ def find_word_file(word, words_folder, target_pitch):
     Obtains the route to the word file from the word
     """
     if not entrainment:
-       target_pitch = ""
-    return "{}/{}-base{}.wav".format(words_folder, word, target_pitch)
+       target_pitch = "base"
+    return "{}/{}-{}.wav".format(words_folder, word, target_pitch)
     
 
 
@@ -69,7 +70,7 @@ def analyze_audio_data(base_path, audio_data, sample_width):
 
 
 def round_and_bound_pitch(x):
-    base = 5
+    base = ROUND_STEP
     value = int(base * round(float(x)/base))
     ret = max(MIN_PITCH, min(MAX_PITCH, value))
     print("Original value = {}; Rounded = {}; returns = {}".format(x, value, ret))
@@ -86,7 +87,8 @@ def wait_for_kid(word = "", base_path = ""):
     if base_path:
         sample_width, audio_data = record_manual()
         mean_pitch = analyze_audio_data(base_path, audio_data, sample_width)
-        target_pitch = round_and_bound_pitch(mean_pitch)
+        if mean_pitch:
+            target_pitch = round_and_bound_pitch(mean_pitch)
     raw_input("Waiting for {}. Press ENTER to continue".format(msg)) # Temporal solution
     return target_pitch
 
@@ -107,10 +109,11 @@ def execute_interaction(script, aup, folder, start_point = 0):
             i += 1
             for i in range(i, i + n_sentences):
                 aup.playFile(folder + "/{:0>2d}-base.wav".format(i))
+                sleep(0.7)
         elif action == "wait":
             wait_for_kid()
         elif action == "pause":
-            sleep(1)  # TODO? Add variation?
+            sleep(0.7)  # TODO? Add variation?
 
 
 def find_start_interaction(scripts, n_interaction):
@@ -131,10 +134,10 @@ def speak_start_experiment(aup):
 def speak_before_task(aup, n_interaction):
     folder = INTERACTIONS_FOLDER + "/base/before_task"
     scripts = [
-            [2],
-            [2, "pause", 1, "wait", 1],
-            [2, "pause", 1, "wait", 2],
-            [2, "pause", 1, "wait", 1]
+            [2, "wait"],
+            [2, "pause", 1, "wait", 1, "wait"],
+            [2, "pause", 1, "wait", 2, "wait"],
+            [2, "pause", 1, "wait", 1, "wait"]
             ]
     start_point = find_start_interaction(scripts, n_interaction)
     script = scripts[n_interaction]
@@ -283,7 +286,7 @@ def main():
     
     set_configuration(p_data_folder)
 
-#    aup = create_proxy("ALAudioPlayer", ip, port)
+    aup = create_proxy("ALAudioPlayer", ip, port)
     
     class MockAup:
         class post:
