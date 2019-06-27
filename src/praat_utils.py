@@ -65,6 +65,8 @@ def adapt(in_sound, out_sound, target_mean_pitch):
 
 def parse_feature_line(line):
     key, value = line.strip().split(",")
+    if value == "--undefined--":
+        return key, None
     return key, float(value)
 
 

@@ -42,7 +42,7 @@ def find_word_file(word, words_folder, target_pitch):
     """
     if not entrainment:
        target_pitch = "base"
-    return "{}/{}-1{}.wav".format(words_folder, word, target_pitch)
+    return "{}/{}-{}.wav".format(words_folder, word, target_pitch)
     
 
 
@@ -87,7 +87,8 @@ def wait_for_kid(word = "", base_path = ""):
     if base_path:
         sample_width, audio_data = record_manual()
         mean_pitch = analyze_audio_data(base_path, audio_data, sample_width)
-        target_pitch = round_and_bound_pitch(mean_pitch)
+        if mean_pitch:
+            target_pitch = round_and_bound_pitch(mean_pitch)
     raw_input("Waiting for {}. Press ENTER to continue".format(msg)) # Temporal solution
     return target_pitch
 
