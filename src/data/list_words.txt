@@ -18,3 +18,8 @@ verb;   0;  wash;   to wash
 verb;   1;  dig;    to dig
 verb;   1;  lift;   to lift
 verb;   1;  pour;   to pour
+practice;   0;  ball
+practice;   0;  sleep
+practice;   0;  sheep
+practice;   0;  eye
+practice;   0;  hand

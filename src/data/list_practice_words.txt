@@ -1,5 +1,0 @@
-practice;   0;  ball
-practice;   0;  sleep
-practice;   0;  sheep
-practice;   0;  eye
-practice;   0;  hand
