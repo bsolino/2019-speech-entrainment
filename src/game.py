@@ -286,18 +286,21 @@ def main():
     
     set_configuration(p_data_folder)
 
-    aup = create_proxy("ALAudioPlayer", ip, port)
-    
-    class MockAup:
-        class post:
+    if DEBUG:
+        debug = input_boolean(
+                "WARNING: Debug mode doesn't use the robot! Continue (y/N)",
+                False)
+    if debug:
+        class MockAup:
+            class post:
+                @staticmethod
+                def playFile(path):
+                    print("Non blocking. File: {}".format(path))
+            
             @staticmethod
             def playFile(path):
-                print("Non blocking. File: {}".format(path))
-        
-        @staticmethod
-        def playFile(path):
-            print("Blocking. File: {}".format(path))
-    #aup = MockAup
+                print("Blocking. File: {}".format(path))
+        aup = MockAup
     
     list_tasks = read_task_lists(f_tasks)
     execute_tasks(list_tasks, aup, words_folder)
