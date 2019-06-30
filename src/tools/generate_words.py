@@ -12,7 +12,7 @@ LANG = "English"
 #FOLDER = "home/nao/entrainment/words"
 #WORD_TYPE = "base"
 FOLDER = "home/nao/entrainment/words/practice"
-WORD_TYPE = "practice"
+WORD_TYPE = "base"
 WORDS_FILE = "data/list_practice_words.txt"
 
 
