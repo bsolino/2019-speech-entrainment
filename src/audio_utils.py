@@ -14,6 +14,15 @@ Note: Improved version over cryo's answer
 #Instead of adding silence at start and end of recording (values=0) I add the original audio . This makes audio sound more natural as volume is >0. See trim()
 #I also fixed issue with the previous code - accumulated silence counter needs to be cleared once recording is resumed.
 
+"""
+Hacks to Silence PyAudio warnings
+"""
+
+import sys
+from os.path import join
+sys.stderr = open(join("return","logfile.txt"), 'wb')
+
+
 from array import array
 from struct import pack
 from sys import byteorder
@@ -32,35 +41,13 @@ NORMALIZE_MINUS_ONE_dB = 10 ** (-1.0 / 20)
 CHANNELS = 1
 TRIM_APPEND = RATE / 4
 
+THRESHOLD_REC = 10 # seconds
 
-
-
-
-
-"""
-To
-"""
-from ctypes import CFUNCTYPE, c_char_p, c_int, cdll
-from contextlib import contextmanager
-ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int, c_char_p)
-
-def py_error_handler(filename, line, function, err, fmt):
-    pass
-
-c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
-
-@contextmanager
-def noalsaerr():
-    asound = cdll.LoadLibrary('libasound.so')
-    asound.snd_lib_error_set_handler(c_error_handler)
-    yield
-    asound.snd_lib_error_set_handler(None)
 
 
 
 def find_threshold():
-    with noalsaerr():
-        p = PyAudio()
+    p = PyAudio()
     stream = p.open(
             format=FORMAT,
             channels=CHANNELS,
@@ -69,8 +56,7 @@ def find_threshold():
             output=True,
             frames_per_buffer=CHUNK_SIZE
             )
-
-    rec_time = 10  # seconds
+    rec_time = THRESHOLD_REC
 
     data_all = array('h')
     for i in range(0, RATE // CHUNK_SIZE * rec_time):
@@ -147,8 +133,7 @@ def record_automatic():
     """Record a word or words from the microphone and 
     return the data as an array of signed shorts."""
 
-    with noalsaerr():
-        p = PyAudio()
+    p = PyAudio()
     stream = p.open(
             format=FORMAT,
             channels=CHANNELS,
@@ -234,8 +219,7 @@ def record_manual():
         
         return in_data, callback_flag
 
-    with noalsaerr():
-        p = PyAudio()
+    p = PyAudio()
     stream = p.open(
             format=FORMAT,
             channels=CHANNELS,
