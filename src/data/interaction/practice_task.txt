@@ -1,0 +1,18 @@
+"Laten we eerst even oefenen zodat je weet hoe je het spel moet spelen."
+"Pak het oefenboekje maar."
+"Je kan hem herkennen aan het Engelse woord voor oefenen, practice."
+"Je mag nu het boekje open doen en mij vertellen welk woord er op de eerste kaart staat."
+"Ik vertel je dan het Engelse woord."
+
+#Ball
+"Nu mag je naar de volgende kaart omslaan en het volgende woord zeggen."
+
+#Eye
+"Ga zo door tot het einde van het boekje alsjeblieft."
+
+#Sleep
+
+#Hand
+
+#Sheep
+"Dat was het einde van de oefening. Heb je nog vragen over het spel?"

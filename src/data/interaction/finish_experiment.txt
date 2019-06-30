@@ -1,6 +1,12 @@
-"Ik vond het leuk om met jou te spelen."
-"Vond jij dat ook?"
-(wait for response)
-"Dit was alweer het laatste spel."
+"Ik zie dat je alle kaarten heb gehad."
+"Je hebt me veel woorden gevraagd."
+"Ik hoop dat je ze allemaal kan onthouden!"
+
+"Ik vond het leuk om jou te zien en om met jou te spelen."
+"Vond jij het ook leuk?"
+
+"Hopelijk heb je wat nieuwe woorden geleerd!"
+"Misschien kan jij straks net zo goed Engels spreken als juf Cathy."
+
+"Het is tijd om gedag te zeggen."
 "Bedankt voor het spelen, en tot de volgende keer."
-"Doei!"
