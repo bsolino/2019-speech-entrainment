@@ -22,7 +22,7 @@ from pyaudio import PyAudio, paInt16, paComplete, paContinue
 import wave
 import numpy as np
 
-THRESHOLD = 107  # audio levels not normalised. # TODO Adjust value
+THRESHOLD = 500  # audio levels not normalised. # TODO Adjust value
 RATE = 44100
 CHUNK_SIZE = 1024
 SILENT_CHUNKS = 1 * RATE // CHUNK_SIZE
@@ -266,6 +266,7 @@ def record_manual():
     data_all = normalize(data_all)
     return sample_width, data_all
 
+
 def record_to_file(path, data, sample_width):
     "Records from the microphone and outputs the resulting data to 'path'"
     data = pack('<' + ('h' * len(data)), *data)
@@ -277,3 +278,6 @@ def record_to_file(path, data, sample_width):
     wave_file.writeframes(data)
     wave_file.close()
 
+
+if __name__ == "__main__":
+    find_threshold()
