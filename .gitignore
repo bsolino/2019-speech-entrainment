@@ -110,9 +110,10 @@ venv.bak/
 # external praat scripts
 /misc/
 
-# data and resourcesq
+# data and resources
 /resources/
 /participant_data/
+/backup/
 
 # test files
 /src/return
