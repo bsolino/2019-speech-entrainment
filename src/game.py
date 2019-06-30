@@ -17,6 +17,8 @@ from time import sleep
 from praat_utils import extract_features, parse_mean_pitch
 from distutils.util import strtobool
 
+DEBUG = True
+
 #CONSTANTS
 FILENAME_TASKS = join("data", "tasks", "selected_tasks.txt")
 PARTICIPANTS_DATA_FOLDER = abspath(join(pardir, "participant_data"))
@@ -301,6 +303,8 @@ def main():
             def playFile(path):
                 print("Blocking. File: {}".format(path))
         aup = MockAup
+    else:
+        aup = create_proxy("ALAudioPlayer", ip, port)
     
     list_tasks = read_task_lists(f_tasks)
     execute_tasks(list_tasks, aup, words_folder)
