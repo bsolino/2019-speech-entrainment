@@ -7,9 +7,7 @@ Created on Wed Jun  5 02:28:02 2019
 """
 
 from distutils.util import strtobool
-
-
-WORDS_FILE = "data/list_words.txt"
+#from game_constants import WORDS_FILE
 
 
 class WordInfo:
@@ -17,7 +15,11 @@ class WordInfo:
     def __init__(self, word, is_target, category, pronunciation):
         self.word = word
         self.is_target = is_target
-        self.pronunciation = pronunciation
+        self.is_sentence = bool(pronunciation)
+        if pronunciation:
+            self.pronunciation = pronunciation
+        else:
+            self.pronunciation = word
         self.category = category
 
 
@@ -59,7 +61,7 @@ def parse_word_info(line):
     if len(word_info) > 3:
         pronunciation = word_info[3]
     else:
-        pronunciation = word
+        pronunciation = None
     return WordInfo(word, is_target, category, pronunciation)
 
 

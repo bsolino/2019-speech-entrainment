@@ -10,22 +10,12 @@ from os.path import join, abspath
 from subprocess import call
 
 PRAAT_SCRIPT_FOLDER = abspath(join("..", "misc"))
-EXTRACT_PRAAT_SCRIPT = join(PRAAT_SCRIPT_FOLDER, "extract_features.praat")
-"""
-    sentence filename
-    sentence outfilename
-    boolean extract_intensity 1
-    boolean extract_pitch 1
-    boolean extract_durations 1
-    boolean extract_jitter_shimmer 1
+PRAAT_LOCATION = "praat" # TODO Update for Bo's computer
 
-"""
+EXTRACT_PRAAT_SCRIPT = join(PRAAT_SCRIPT_FOLDER, "extract_features.praat")
 EXTRACT_SCRIPT_PITCH_OPTION = ["0", "1", "0", "0"]
 
 ADAPT_PRAAT_SCRIPT = join(join(PRAAT_SCRIPT_FOLDER, "adapt.praat"))
-
-
-PRAAT_LOCATION = "praat"
 
 def call_praat(script, args = None):
     praat_call = [

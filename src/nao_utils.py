@@ -3,13 +3,7 @@
 
 from naoqi import ALProxy
 
-IP_WIFI = "192.168.0.199"
-IP_CABLE = "192.168.0.197"
-
-#IP = IP_WIFI
-IP = IP_CABLE
-
-PORT = 9559
+from game_constants import IP, PORT
 
 def create_proxy(proxy_name, ip = IP, port = PORT):
     """

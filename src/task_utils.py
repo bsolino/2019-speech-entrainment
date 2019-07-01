@@ -7,11 +7,11 @@ Created on Wed Jun  5 16:06:38 2019
 """
 
 import random
-from word_list_utils import parse_file, WORDS_FILE, WordInfo
+from word_list_utils import parse_file, WORDS_FILE
+from os.path import join
 
-
-DISTRIBUTIONS_FILE = "data/tasks/distributions.txt"
-TASKS_FILE = "data/tasks/tasks.txt"
+DISTRIBUTIONS_FILE = join("data", "tasks", "distributions.txt")
+TASKS_FILE = join("data", "tasks", "tasks.txt")
 
 
 

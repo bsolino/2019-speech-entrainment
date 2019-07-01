@@ -6,7 +6,7 @@ Created on Wed Jun  5 02:48:37 2019
 @author: breixo
 """
 
-from os import pardir, listdir, makedirs
+from os import listdir, makedirs
 from os.path import join, abspath, exists
 from shutil import rmtree
 from nao_utils import create_proxy, IP, PORT
@@ -17,23 +17,31 @@ from time import sleep
 from praat_utils import extract_features, parse_mean_pitch
 from distutils.util import strtobool
 
-DEBUG = True
+# Local data
+from game_constants import FILENAME_TASKS, PARTICIPANTS_DATA_FOLDER
+# NAO Data
+from game_constants import NAO_FOLDER, WORDS_FOLDER_TEMPLATE, INTERACTIONS_FOLDER_TEMPLATE
+# Voice Data
+from game_constants import PITCH_WORDS, SPEED_WORDS, PITCH_INTERACTIONS, SPEED_INTERACTIONS
+# Entrainment
+from game_constants import MIN_PITCH, MAX_PITCH, ROUND_STEP
+
+from test_utils import AudioPlayerMock
+
+WORDS_FOLDER = NAO_FOLDER + WORDS_FOLDER_TEMPLATE.format(
+        SPEED_WORDS, PITCH_WORDS)
+INTERACTIONS_FOLDER = NAO_FOLDER + INTERACTIONS_FOLDER_TEMPLATE.format(
+        SPEED_INTERACTIONS, PITCH_INTERACTIONS)
+
 
 #CONSTANTS
-FILENAME_TASKS = join("data", "tasks", "selected_tasks.txt")
-PARTICIPANTS_DATA_FOLDER = abspath(join(pardir, "participant_data"))
-NAO_FOLDER = "/home/nao/entrainment"
-WORDS_FOLDER = NAO_FOLDER + "/words_s075_p1.00/experiment"
-INTERACTIONS_FOLDER = NAO_FOLDER + "/interactions_s100_p1.15"
+DEBUG = True
 
-MIN_PITCH = 130
-MAX_PITCH = 350
-ROUND_STEP = 5
-
-# CONFIGURATION
+# CONFIGURATION GLOBAL VARIABLES
 participant_id = None
 entrainment = None
 p_folder = None
+
 
 
 # UTILS
@@ -293,16 +301,7 @@ def main():
                 "WARNING: Debug mode doesn't use the robot! Continue (y/N)",
                 False)
     if debug:
-        class MockAup:
-            class post:
-                @staticmethod
-                def playFile(path):
-                    print("Non blocking. File: {}".format(path))
-            
-            @staticmethod
-            def playFile(path):
-                print("Blocking. File: {}".format(path))
-        aup = MockAup
+        aup = AudioPlayerMock
     else:
         aup = create_proxy("ALAudioPlayer", ip, port)
     
