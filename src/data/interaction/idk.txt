@@ -1,7 +1,11 @@
+# Task 1, item 8 - Walk
 "Eh. Ik ken dat woord niet. Kunnen we deze overslaan alsjeblieft?"
 
+# Task 2, item 3 - Ear
 "Sorry. Ik ben het Engelse woord vergeten. Vraag me het volgende woord alsjeblieft."
 
+# Task 3, item 7 - Walk
 "Eh. Sorry. Ik weet het niet. Probeer het volgende woord maar."
 
+# Task 4, item 3 -Ear
 "... Ik kan even niet op het woord komen. Ga maar naar de volgende."

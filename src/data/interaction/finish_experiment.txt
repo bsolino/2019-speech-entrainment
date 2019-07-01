@@ -4,6 +4,7 @@
 
 "Ik vond het leuk om jou te zien en om met jou te spelen."
 "Vond jij het ook leuk?"
+(wait)
 
 "Hopelijk heb je wat nieuwe woorden geleerd!"
 "Misschien kan jij straks net zo goed Engels spreken als juf Cathy."

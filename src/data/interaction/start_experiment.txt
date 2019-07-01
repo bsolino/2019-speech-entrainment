@@ -1,12 +1,14 @@
 "Hallo."
 "Ik heet Robin."
 "Wat is jouw naam?"
+(wait)
 
 "Leuk om jou te zien."
 "Wij gaan vandaag samen een spel doen."
 "Ik houd van spelletjes!"
 "Ik heb een vraag voor jou."
 "Wat vind jij een leuk spel?"
+(wait)
 
 "Dat vind ik ook leuk!"
 
@@ -14,3 +16,4 @@
 "Met mijn spel kunnen we Engelse woorden oefenen."
 "Dan kan je horen wat ik allemaal geleerd heb in Engeland."
 "Zullen we dat gaan spelen?"
+(wait)

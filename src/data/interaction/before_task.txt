@@ -1,18 +1,41 @@
-"Als je wilt beginnen met het spel, vraag me dan of ik er klaar voor ben. Dan gaan we beginnen."
+# Practice - Before
+"Laten we eerst even oefenen zodat je weet hoe je het spel moet spelen."
+"Pak het oefenboekje maar."
+"Je mag nu het boekje open doen en mij vertellen welk woord er op de eerste kaart staat."
+"Ik vertel je dan het Engelse woord."
 
+
+# Task 1
+"Als je wilt beginnen met het spel, vraag me dan of ik er klaar voor ben. Dan gaan we beginnen."
+(wait)
+
+"Ja"
 "Je mag het eerste boekje met kaarten pakken."
 "Ik ben er klaar voor! Je mag nu het eerste woord zeggen."
 
+
+# Task 2
 "Zullen we nu andere woorden oefenen? Pak het volgende boekje, alsjeblieft."
+(wait)
+
 "Ja, ik ben er klaar voor."
 "Tijd voor de volgende ronde! Je mag beginnen."
 
+
+# Task 3
+"Ik vind dat je leuke woorden heb gekozen."
 "Nu gaan we naar de volgende ronde."
 "Pak het volgende boekje maar."
+(wait)
+
 "Ja."
 "Hier gaan we. Begin maar."
 
+
+# Task 4
 "Nu is het tijd voor de laatste ronde."
 "Pak alsjeblieft het laatste boekje."
+(wait)
+
 "Ja, kom maar op."
 "Oké! Hier gaan we dan."
