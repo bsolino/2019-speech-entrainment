@@ -88,18 +88,20 @@ def round_and_bound_pitch(x):
 
 # ACTIONS
 
-def wait_for_kid(word = "", base_path = ""):
-    if word:
-        msg = "word: \"{}\"".format(word)
-    else:
-        msg = "utterance"
+def wait_for_kid(word = "", base_path = "", msg = ""):
+    if msg == "":
+        if word:
+            msg_word = "word: \"{}\"".format(word)
+        else:
+            msg_word = "utterance"
+        msg = "Waiting for {}. Press ENTER to continue".format(msg_word)
     target_pitch = None
     if base_path:
         sample_width, audio_data = record_manual()
         mean_pitch = analyze_audio_data(base_path, audio_data, sample_width)
         if mean_pitch:
             target_pitch = round_and_bound_pitch(mean_pitch)
-    raw_input("Waiting for {}. Press ENTER to continue".format(msg)) # Temporal solution
+    raw_input(msg) # Temporal solution
     return target_pitch
 
 
@@ -107,6 +109,7 @@ def play_file(filename, target_freq, folder, aup):
     word_file = find_word_file(filename, folder, target_freq)
     print(word_file)
     aup.post.playFile(word_file)
+#    aup.playFile(word_file) # Testing blocking the call
 
 
 # ROBOT UTTERANCES
@@ -136,35 +139,68 @@ def find_start_interaction(scripts, n_interaction):
 
 
 def speak_start_experiment(aup):
-    folder = INTERACTIONS_FOLDER + "/base/start_experiment"
-    script = [2, "wait", 3, "wait", 1, "pause", 3, "pause", 1, "wait", 1]
+    folder = INTERACTIONS_FOLDER + "/start_experiment"
+    script = [3, "wait", 5, "wait", 5]
     execute_interaction(script, aup, folder)
 
 
 def speak_before_task(aup, n_interaction):
-    folder = INTERACTIONS_FOLDER + "/base/before_task"
+    folder = INTERACTIONS_FOLDER + "/before_task"
     scripts = [
-            [2, "wait"],
-            [2, "pause", 1, "wait", 1, "wait"],
-            [2, "pause", 1, "wait", 2, "wait"],
-            [2, "pause", 1, "wait", 1, "wait"]
+            [4, "wait"],     # Practice round
+            [1, "wait", 3],     # Task 1
+            [1, "wait", 2],     # Task 2
+            [3, "wait", 2],     # Task 3
+            [2, "wait", 2]      # Task 4
             ]
     start_point = find_start_interaction(scripts, n_interaction)
     script = scripts[n_interaction]
     execute_interaction(script, aup, folder, start_point)
 
 
+def speak_after_item(aup, i_task, i_item):
+    # NOTE! This is a different kind of script:
+    #   The internal array represents after which item the line is said.
+    #   It assumes only one line after item
+    folder = INTERACTIONS_FOLDER + "/during_task"
+    i_item_h = i_item +1 # "Human readable"
+    scripts = [
+            [1, 2, 5],    # Practice
+            [6],            # Task 1
+            [6],            # Task 2
+            [6],            # Task 3
+            [7]             # Task 4
+            ]
+    if i_item_h in scripts[i_task]:
+        wait_for_kid(msg = "Waiting for robot to stop talking")
+        i_line = 0
+        for script_i_task in range(i_task +1):
+            script = scripts[script_i_task]
+            if script_i_task == i_task:
+                i_line += script.index(i_item_h)
+            else:
+                i_line += len(script)
+        print("I line {}".format(i_line))
+        execute_interaction([1], aup, folder, i_line)
+
+
 def speak_after_task(aup, n_interaction):
-    folder = INTERACTIONS_FOLDER + "/base/after_task"
-    scripts = [[1], [1], [1], [1]]
+    folder = INTERACTIONS_FOLDER + "/after_task"
+    scripts = [
+            [],     # Practice - Nothing
+            [1],    # Task 1
+            [1],    # Task 2
+            [1],    # Task 3
+            [1]     # Task 4
+            ]
     start_point = find_start_interaction(scripts, n_interaction)
     script = scripts[n_interaction]
     execute_interaction(script, aup, folder, start_point)
 
 
 def speak_finish_experiment(aup):
-    folder = INTERACTIONS_FOLDER + "/base/finish_experiment"
-    script = [2, "wait", 3]
+    folder = INTERACTIONS_FOLDER + "/finish_experiment"
+    script = [5, "wait", 4]
     execute_interaction(script, aup, folder)
 
 
@@ -182,6 +218,7 @@ def execute_task(task, i_task, aup, words_folder):
         results_path = join(p_folder, results_name)
         target_pitch = wait_for_kid(word, results_path)
         play_file(word, target_pitch, words_folder, aup)
+        speak_after_item(aup, i_task, i)
 
 
 def execute_tasks(list_tasks, aup, words_folder):
@@ -298,7 +335,7 @@ def main():
 
     if DEBUG:
         debug = input_boolean(
-                "WARNING: Debug mode doesn't use the robot! Continue (y/N)",
+                "WARNING: Debug mode doesn't use the robot! Continue debug? (y/N) ",
                 False)
     if debug:
         aup = AudioPlayerMock
