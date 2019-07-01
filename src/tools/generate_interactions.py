@@ -10,13 +10,20 @@ from os import listdir
 from os.path import join, isfile, isdir, basename
 from nao_utils import create_proxy, IP, PORT
 
-PITCH = 1.15
-#SPEED = .75 * 100
-SPEED = 1 * 100
-LANG = "Dutch"
+from game_constants import NAO_FOLDER, GENERATION_FOLDER, INTERACTIONS_FOLDER_TEMPLATE
+from game_constants import PITCH_INTERACTIONS, SPEED_INTERACTIONS, LANG_NL
 
-NAO_FOLDER = "/home/nao/entrainment/interactions_s{:0>3d}_p{:.2f}/base".format(
-        SPEED, PITCH)
+from test_utils import TextToSpeechMock
+
+PITCH = PITCH_INTERACTIONS
+SPEED = SPEED_INTERACTIONS
+LANG = LANG_NL
+
+#NAO_FOLDER = "/home/nao/entrainment/interactions_s{:0>3d}_p{:.2f}/base".format(
+#        SPEED, PITCH)
+DEST_FOLDER = NAO_FOLDER + GENERATION_FOLDER \
+        + INTERACTIONS_FOLDER_TEMPLATE.format(
+                SPEED, PITCH)
 INTERACTIONS_FOLDER = join("data", "interaction")
 
 VERBOSE = True
@@ -116,7 +123,7 @@ def retrieve_word_files(folder):
 def main():
     # Parse properties
     origin_folder = INTERACTIONS_FOLDER
-    destination_folder = NAO_FOLDER
+    destination_folder = DEST_FOLDER
     ip = IP
     port = PORT
     pitch = PITCH
@@ -125,6 +132,7 @@ def main():
 
 
     tts = create_proxy("ALTextToSpeech", ip, port)
+#    tts = TextToSpeechMock
     configure_voice(tts, language, pitch, speed)
     
     interaction_files = parse_interactions_folder(origin_folder)
