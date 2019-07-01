@@ -7,7 +7,8 @@ Created on Wed Jun  5 16:06:38 2019
 """
 
 import random
-from word_list_utils import parse_file, WORDS_FILE
+from word_list_utils import parse_file
+from game_constants import WORDS_FILE
 from os.path import join
 
 DISTRIBUTIONS_FILE = join("data", "tasks", "distributions.txt")

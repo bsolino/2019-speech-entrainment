@@ -7,7 +7,6 @@ Created on Wed Jun  5 02:28:02 2019
 """
 
 from distutils.util import strtobool
-#from game_constants import WORDS_FILE
 
 
 class WordInfo:
