@@ -33,6 +33,7 @@ WORDS_FOLDER = NAO_FOLDER + WORDS_FOLDER_TEMPLATE.format(
 INTERACTIONS_FOLDER = NAO_FOLDER + INTERACTIONS_FOLDER_TEMPLATE.format(
         SPEED_INTERACTIONS, PITCH_INTERACTIONS)
 
+UNKNOWN_WORDS = ["ear", "walk"]
 
 #CONSTANTS
 DEBUG = True
@@ -42,6 +43,7 @@ participant_id = None
 entrainment = None
 p_folder = None
 
+be_mngr = None
 
 
 # UTILS
@@ -127,6 +129,10 @@ def execute_interaction(script, aup, folder, start_point = 0):
             wait_for_kid()
         elif action == "pause":
             sleep(0.7)  # TODO? Add variation?
+        else:
+            # We assume that it'll be an animation address
+            global be_mngr
+            be_mngr.startBehavior(action)
 
 
 def find_start_interaction(scripts, n_interaction):
@@ -184,6 +190,16 @@ def speak_after_item(aup, i_task, i_item):
         execute_interaction([1], aup, folder, i_line)
 
 
+def speak_unknown(aup, n_interaction):
+    """
+    Disclaimer: This function has been done very hastily and hacky
+    """
+    folder = INTERACTIONS_FOLDER + "/idk"
+    # NOTE Because 0 is Practice
+    start_point =  n_interaction -1 
+    execute_interaction([1], aup, folder, start_point)
+
+
 def speak_after_task(aup, n_interaction):
     folder = INTERACTIONS_FOLDER + "/after_task"
     scripts = [
@@ -217,7 +233,10 @@ def execute_task(task, i_task, aup, words_folder):
                 i_task+1, i+1, word)
         results_path = join(p_folder, results_name)
         target_pitch = wait_for_kid(word, results_path)
-        play_file(word, target_pitch, words_folder, aup)
+        if word in UNKNOWN_WORDS:
+            speak_unknown(aup, i_task)
+        else:
+            play_file(word, target_pitch, words_folder, aup)
         speak_after_item(aup, i_task, i)
 
 
@@ -341,6 +360,9 @@ def main():
         aup = AudioPlayerMock
     else:
         aup = create_proxy("ALAudioPlayer", ip, port)
+        global be_mngr
+        be_mngr = create_proxy("ALBehaviorManager", ip, port)
+        
     
     list_tasks = read_task_lists(f_tasks)
     execute_tasks(list_tasks, aup, words_folder)
