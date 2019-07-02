@@ -32,3 +32,8 @@ class TextToSpeechMock:
     @staticmethod
     def setParameter(parameter, value):
         print("Set parameter {} to value {}".format(parameter, value))
+        
+class BehaviorManagerMock:
+    @staticmethod
+    def startBehavior(route):
+        print("BehaviorManagerMock: startBehavior(\"{}\")".format(route))
