@@ -12,6 +12,6 @@ Hack to Silence PyAudio warnings
 
 import sys
 from os.path import join
-sys.stderr = open(join("return","logfile.txt"), 'wb')
+sys.stderr = open(join("return","logfile.txt"), 'ab')
 
 execfile('game.py')

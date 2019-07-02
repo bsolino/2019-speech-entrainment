@@ -14,14 +14,6 @@ Note: Improved version over cryo's answer
 #Instead of adding silence at start and end of recording (values=0) I add the original audio . This makes audio sound more natural as volume is >0. See trim()
 #I also fixed issue with the previous code - accumulated silence counter needs to be cleared once recording is resumed.
 
-"""
-Hacks to Silence PyAudio warnings
-"""
-
-import sys
-from os.path import join
-sys.stderr = open(join("return","logfile.txt"), 'wb')
-
 
 from array import array
 from struct import pack
