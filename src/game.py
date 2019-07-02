@@ -21,15 +21,20 @@ from distutils.util import strtobool
 from game_constants import FILENAME_TASKS, PARTICIPANTS_DATA_FOLDER
 # NAO Data
 from game_constants import NAO_FOLDER, WORDS_FOLDER_TEMPLATE, INTERACTIONS_FOLDER_TEMPLATE
+#from game_constants import  WORDS_NELLEKE, WORDS_JUDITH
 # Voice Data
 from game_constants import PITCH_WORDS, SPEED_WORDS, PITCH_INTERACTIONS, SPEED_INTERACTIONS
 # Entrainment
 from game_constants import MIN_PITCH, MAX_PITCH, ROUND_STEP
+# Interaction scripts
+from game_constants import SCRIPT_START, SCRIPT_BEFORE_TASK, SCRIPT_AFTER_ITEM, SCRIPT_AFTER_TASK, SCRIPT_FINISH 
 
 from test_utils import AudioPlayerMock
 
 WORDS_FOLDER = NAO_FOLDER + WORDS_FOLDER_TEMPLATE.format(
         SPEED_WORDS, PITCH_WORDS)
+#WORDS_FOLDER = NAO_FOLDER + WORDS_NELLEKE
+#WORDS_FOLDER = NAO_FOLDER + WORDS_JUDITH
 INTERACTIONS_FOLDER = NAO_FOLDER + INTERACTIONS_FOLDER_TEMPLATE.format(
         SPEED_INTERACTIONS, PITCH_INTERACTIONS)
 
@@ -146,37 +151,27 @@ def find_start_interaction(scripts, n_interaction):
 
 def speak_start_experiment(aup):
     folder = INTERACTIONS_FOLDER + "/start_experiment"
-    script = [3, "wait", 5, "wait", 5]
+    script = SCRIPT_START
     execute_interaction(script, aup, folder)
 
 
 def speak_before_task(aup, n_interaction):
     folder = INTERACTIONS_FOLDER + "/before_task"
-    scripts = [
-            [4, "wait"],     # Practice round
-            [1, "wait", 3],     # Task 1
-            [1, "wait", 2],     # Task 2
-            [3, "wait", 2],     # Task 3
-            [2, "wait", 2]      # Task 4
-            ]
+    scripts = SCRIPT_BEFORE_TASK
     start_point = find_start_interaction(scripts, n_interaction)
     script = scripts[n_interaction]
     execute_interaction(script, aup, folder, start_point)
 
 
 def speak_after_item(aup, i_task, i_item):
-    # NOTE! This is a different kind of script:
-    #   The internal array represents after which item the line is said.
-    #   It assumes only one line after item
+    """
+    NOTE! This is a different kind of script:
+        The internal array represents after which item the line is said.
+        It assumes only one line after item
+    """
     folder = INTERACTIONS_FOLDER + "/during_task"
     i_item_h = i_item +1 # "Human readable"
-    scripts = [
-            [1, 2, 5],    # Practice
-            [6],            # Task 1
-            [6],            # Task 2
-            [6],            # Task 3
-            [7]             # Task 4
-            ]
+    scripts = SCRIPT_AFTER_ITEM
     if i_item_h in scripts[i_task]:
         wait_for_kid(msg = "Waiting for robot to stop talking")
         i_line = 0
@@ -202,13 +197,7 @@ def speak_unknown(aup, n_interaction):
 
 def speak_after_task(aup, n_interaction):
     folder = INTERACTIONS_FOLDER + "/after_task"
-    scripts = [
-            [],     # Practice - Nothing
-            [1],    # Task 1
-            [1],    # Task 2
-            [1],    # Task 3
-            [1]     # Task 4
-            ]
+    scripts = SCRIPT_AFTER_TASK
     start_point = find_start_interaction(scripts, n_interaction)
     script = scripts[n_interaction]
     execute_interaction(script, aup, folder, start_point)
@@ -216,7 +205,7 @@ def speak_after_task(aup, n_interaction):
 
 def speak_finish_experiment(aup):
     folder = INTERACTIONS_FOLDER + "/finish_experiment"
-    script = [5, "wait", 4]
+    script = SCRIPT_FINISH
     execute_interaction(script, aup, folder)
 
 
