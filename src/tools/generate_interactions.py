@@ -21,12 +21,11 @@ LANG = LANG_NL
 
 #NAO_FOLDER = "/home/nao/entrainment/interactions_s{:0>3d}_p{:.2f}/base".format(
 #        SPEED, PITCH)
-DEST_FOLDER = NAO_FOLDER + GENERATION_FOLDER \
-        + INTERACTIONS_FOLDER_TEMPLATE.format(
-                SPEED, PITCH)
+DEST_FOLDER_TEMPLATE = NAO_FOLDER + GENERATION_FOLDER \
+        + INTERACTIONS_FOLDER_TEMPLATE
 INTERACTIONS_FOLDER = join("data", "interaction")
 
-VERBOSE = True
+VERBOSE = False
 
 class Sentence:
     
@@ -120,10 +119,23 @@ def retrieve_word_files(folder):
 #    ssh.close()
 
 
+def generate_interactions(tts, language, pitch, speed,
+                          origin_folder, destination_folder_template):
+    configure_voice(tts, language, pitch, speed)
+    interaction_files = parse_interactions_folder(origin_folder)
+    destination_folder = destination_folder_template.format(
+                speed, pitch)
+    for filename in interaction_files:
+        list_sentences = parse_sentences_file(filename)
+        for sentence in list_sentences:
+           sentence.say_to_file(tts, destination_folder)
+        retrieve_word_files(destination_folder)
+
+
 def main():
     # Parse properties
     origin_folder = INTERACTIONS_FOLDER
-    destination_folder = DEST_FOLDER
+    destination_folder_template = DEST_FOLDER_TEMPLATE
     ip = IP
     port = PORT
     pitch = PITCH
@@ -133,14 +145,11 @@ def main():
 
     tts = create_proxy("ALTextToSpeech", ip, port)
 #    tts = TextToSpeechMock
-    configure_voice(tts, language, pitch, speed)
-    
-    interaction_files = parse_interactions_folder(origin_folder)
-    for filename in interaction_files:
-        list_sentences = parse_sentences_file(filename)
-        for sentence in list_sentences:
-           sentence.say_to_file(tts, destination_folder)
-        retrieve_word_files(destination_folder)
+    for int_pitch in range(101, int(round(PITCH*100))):
+        pitch = float(int_pitch)/100
+        print("{:.2f}".format(pitch))
+        generate_interactions(tts, language, pitch, speed,
+                              origin_folder, destination_folder_template)
 
 
 if __name__ == "__main__":
