@@ -1,11 +1,14 @@
+# Practice - After
+"Dat was het einde van de oefening. Heb je nog vragen over het spel?"
+
 # Task 1
 "Dat was leuk!"
 
 # Task 2
-"Yes! Dat was de tweede ronde."
+"Je bent nu klaar met de tweede ronde."
 
 # Task 3
 "Oké, dat was het einde van de ronde. Ik vind dit een leuk spel!"
 
 # Task 4
-"Yeah! Dit ging goed. Nu is de vierde ronde afgelopen. "
+"Ja! Dit ging goed. Nu is de vierde ronde afgelopen."

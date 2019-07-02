@@ -65,47 +65,58 @@ PORT = 9559
 Interaction scripts
 """
 SCRIPT_START = [
+        "animations/Stand/Emotions/Neutral/Hello_1",
         3,
         "wait",
         5,
         "wait",
-        5
+        5,
+        "wait",
+        3
         ]
 SCRIPT_BEFORE_TASK = [
         [               # Practice round
-                4,
-                "wait"
-                ],
-        [               # Task 1
-                1,
-                "wait",
-                3
-                ],
-        [               # Task 2
-                1,
-                "wait",
-                2
-                ],
-        [               # Task 3
                 3,
                 "wait",
                 2
                 ],
+        [               # Task 1
+                1,
+                "wait",
+                2,
+                "wait",
+                1
+                ],
+        [               # Task 2
+                1,
+                "wait",
+                1
+                ],
+        [               # Task 3
+                2,
+                "wait",
+                1
+                ],
         [               # Task 4
                 2,
                 "wait",
-                2
+                1
                 ]
         ]
 SCRIPT_AFTER_ITEM = [
-        [1, 2, 5],    # Practice
-        [6],            # Task 1
-        [6],            # Task 2
-        [6],            # Task 3
-        [7]             # Task 4
+        [1, 2],    # Practice
+        [],
+        [],
+        [],
+        []
+#        [1, 2, 5],    # Practice
+#        [6],            # Task 1
+#        [6],            # Task 2
+#        [6],            # Task 3
+#        [7]             # Task 4
         ]
 SCRIPT_AFTER_TASK = [
-        [],     # Practice - Nothing
+        [1],     # Practice - Nothing
         [1],    # Task 1
         [1],    # Task 2
         [1],    # Task 3

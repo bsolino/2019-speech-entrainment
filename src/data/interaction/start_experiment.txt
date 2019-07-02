@@ -15,5 +15,9 @@
 "Ik heb zelf ook een spel meegenomen."
 "Met mijn spel kunnen we Engelse woorden oefenen."
 "Dan kan je horen wat ik allemaal geleerd heb in Engeland."
-"Zullen we dat gaan spelen?"
+"Zullen we dat zo gaan spelen?"
 (wait)
+
+"Laten we eerst kijken hoe goed jouw Engels al is. Dan weet ik welke woorden ik jou kan leren."
+"Je mag nu met Judith de eerste test doen."
+"Ik wacht hier op jou tot je terug bent. Daarna gaan we het spel spelen."

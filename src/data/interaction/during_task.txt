@@ -1,7 +1,9 @@
 #Practice, Item 1 - Ball
+"Goed zo!"
 "Nu mag je naar de volgende kaart omslaan en het volgende woord zeggen."
 
 #Practice, Item 2 - Eye
+"Perfect!"
 "Ga zo door tot het einde van het boekje alsjeblieft."
 
 #Practice, Item 3 - Sleep
@@ -9,18 +11,18 @@
 #Practice, Item 4 - Hand
 
 #Practice, Item 5 - Sheep
-"Dat was het einde van de oefening. Heb je nog vragen over het spel?"
+
 
 
 
 # Task 1, item 6 - Dig
-"Je doet het goed! Straks spreek jij even goed Engels als ik."
+#Je doet het goed! Straks spreek jij even goed Engels als ik.
 
 # Task 2, item 6 - Ship
-"Ik ben op een schip naar Engeland gevaren! Dat was heel spannend!"
+#Ik ben op een schip naar Engeland gevaren! Dat was heel spannend!
 
 # Task 3, item 6 - Swim
-"Op vakantie heb ik niet gezwommen, want ik kan niet tegen water."
+#Op vakantie heb ik niet gezwommen, want ik kan niet tegen water.
 
 # Task 4, item 7 - Shoe
-"Ik draag ook graag schoenen. Ze passen alleen niet zo goed aan mijn voeten!"
+#Ik draag ook graag schoenen. Ze passen alleen niet zo goed aan mijn voeten!1
