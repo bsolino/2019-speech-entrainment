@@ -29,7 +29,7 @@ from game_constants import MIN_PITCH, MAX_PITCH, ROUND_STEP
 # Interaction scripts
 from game_constants import SCRIPT_START, SCRIPT_BEFORE_TASK, SCRIPT_AFTER_ITEM, SCRIPT_AFTER_TASK, SCRIPT_FINISH 
 
-from test_utils import AudioPlayerMock
+from test_utils import AudioPlayerMock, BehaviorManagerMock
 
 WORDS_FOLDER = NAO_FOLDER + WORDS_FOLDER_TEMPLATE.format(
         SPEED_WORDS, PITCH_WORDS)
@@ -49,6 +49,14 @@ entrainment = None
 p_folder = None
 
 be_mngr = None
+
+
+"""
+Hacks to Silence PyAudio warnings
+"""
+
+import sys
+sys.stderr = open(join("return","logfile.txt"), 'ab')
 
 
 # UTILS
@@ -126,10 +134,15 @@ def execute_interaction(script, aup, folder, start_point = 0):
     for action in script:
         if type(action) is int:
             n_sentences = action
+            i_last_sentence = i + n_sentences
             i += 1
-            for i in range(i, i + n_sentences):
-                aup.playFile(folder + "/{:0>2d}-base.wav".format(i))
-                sleep(0.7)
+            for i in range(i, i_last_sentence+1):
+                audio_file = folder + "/{:0>2d}-base.wav".format(i)
+                print("Interaction {} of {}".format(i, i_last_sentence))
+                aup.playFile(audio_file)
+                if i < i_last_sentence:
+                    print("Pausing")
+                    sleep(0.7)
         elif action == "wait":
             wait_for_kid()
         elif action == "pause":
@@ -137,6 +150,7 @@ def execute_interaction(script, aup, folder, start_point = 0):
         else:
             # We assume that it'll be an animation address
             global be_mngr
+        
             be_mngr.startBehavior(action)
 
 
@@ -167,7 +181,7 @@ def speak_after_item(aup, i_task, i_item):
     """
     NOTE! This is a different kind of script:
         The internal array represents after which item the line is said.
-        It assumes only one line after item
+        It assumes ALWAYS 2 lines after item
     """
     folder = INTERACTIONS_FOLDER + "/during_task"
     i_item_h = i_item +1 # "Human readable"
@@ -182,7 +196,7 @@ def speak_after_item(aup, i_task, i_item):
             else:
                 i_line += len(script)
         print("I line {}".format(i_line))
-        execute_interaction([1], aup, folder, i_line)
+        execute_interaction([2], aup, folder, i_line*2) # SUPER HACKY!!
 
 
 def speak_unknown(aup, n_interaction):
@@ -347,6 +361,8 @@ def main():
                 False)
     if debug:
         aup = AudioPlayerMock
+        global be_mngr
+        be_mngr = BehaviorManagerMock
     else:
         aup = create_proxy("ALAudioPlayer", ip, port)
         global be_mngr
