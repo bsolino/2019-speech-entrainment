@@ -12,7 +12,7 @@ from shutil import rmtree
 from nao_utils import create_proxy, IP, PORT
 #from word_list_utils import parse_file
 from task_utils import read_task_lists
-from audio_utils import record_full_manual, record_to_file
+from audio_utils import find_threshold, record_full_manual, record_to_file
 from time import sleep
 from praat_utils import extract_features, parse_mean_pitch
 from distutils.util import strtobool
@@ -32,7 +32,7 @@ from game_constants import MIN_PITCH, MAX_PITCH, ROUND_STEP
 # Interaction scripts
 from game_constants import SCRIPT_START, SCRIPT_BEFORE_TASK, SCRIPT_AFTER_ITEM, SCRIPT_AFTER_TASK, SCRIPT_FINISH 
 
-from test_utils import AudioPlayerMock, BehaviorManagerMock
+from test_utils import AudioPlayerMock, BehaviorManagerMock, MotionMock
 
 NAO_WORDS_FOLDER_TEMPLATE = NAO_FOLDER + WORDS_FOLDER_TEMPLATE
 #WORDS_FOLDER = NAO_FOLDER + WORDS_NELLEKE
@@ -59,6 +59,7 @@ words_folder = None
 # HOTFIX GLOBAL VARIABLES
 last_target_pitch = 240  # For issues with entrainment failures. 240 as is average value
 be_mngr = None # BEHAVIOR MANAGER - here for simplicity
+motion = None
 
 
 """
@@ -165,6 +166,10 @@ def execute_interaction(script, aup, folder, start_point = 0):
             wait_for_kid()
         elif type(action) is float:
             sleep(action)
+        elif action == "rest":
+            motion.rest()
+        elif action == "wake up":
+            motion.wakeUp()
         else:
             # We assume that it'll be an animation address
             global be_mngr
@@ -375,6 +380,10 @@ def set_configuration(p_data_folder):
             speed_words, pitch_words)
 
 
+def check_audio():
+    find_threshold(1)
+
+
 def main():
     # Parse properties
     f_tasks = FILENAME_TASKS
@@ -383,6 +392,8 @@ def main():
 #    interactions_folder = INTERACTIONS_FOLDER
     ip = IP
     port = PORT
+    
+    check_audio()
     
     if not exists(p_data_folder):
         makedirs(p_data_folder)
@@ -393,15 +404,16 @@ def main():
         debug = input_boolean(
                 "WARNING: Debug mode doesn't use the robot! Continue debug? (y/N) ",
                 False)
+    global be_mngr, motion
     if debug:
         aup = AudioPlayerMock
-        global be_mngr
         be_mngr = BehaviorManagerMock
+        motion = MotionMock
     else:
         aup = create_proxy("ALAudioPlayer", ip, port)
-        global be_mngr
-        be_mngr = create_proxy("ALBehaviorManager", ip, port)
         
+        be_mngr = create_proxy("ALBehaviorManager", ip, port)
+        motion = create_proxy("ALMotion", ip, port)
     
     list_tasks = read_task_lists(f_tasks)
     execute_tasks(list_tasks, aup, words_folder)
