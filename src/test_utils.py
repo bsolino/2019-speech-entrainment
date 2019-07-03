@@ -53,3 +53,12 @@ class BehaviorManagerMock:
     @staticmethod
     def startBehavior(route):
         print("BehaviorManagerMock: startBehavior(\"{}\")".format(route))
+
+class MotionMock:
+    @staticmethod
+    def wakeUp():
+        print("MotionMock: wakeUp()")
+        
+    @staticmethod
+    def rest():
+        print("MotionMock: rest()")
