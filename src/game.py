@@ -12,7 +12,7 @@ from shutil import rmtree
 from nao_utils import create_proxy, IP, PORT
 #from word_list_utils import parse_file
 from task_utils import read_task_lists
-from audio_utils import record_manual, record_to_file
+from audio_utils import record_full_manual, record_to_file
 from time import sleep
 from praat_utils import extract_features, parse_mean_pitch
 from distutils.util import strtobool
@@ -23,7 +23,10 @@ from game_constants import FILENAME_TASKS, PARTICIPANTS_DATA_FOLDER
 from game_constants import NAO_FOLDER, WORDS_FOLDER_TEMPLATE, INTERACTIONS_FOLDER_TEMPLATE
 #from game_constants import  WORDS_NELLEKE, WORDS_JUDITH
 # Voice Data
-from game_constants import PITCH_WORDS, SPEED_WORDS, PITCH_INTERACTIONS, SPEED_INTERACTIONS
+from game_constants import \
+        PITCH_WORDS, SPEED_WORDS, \
+        PITCH_INTERACTIONS_ENTRAINMENT, PITCH_INTERACTIONS_CONTROL, \
+        SPEED_INTERACTIONS
 # Entrainment
 from game_constants import MIN_PITCH, MAX_PITCH, ROUND_STEP
 # Interaction scripts
@@ -31,12 +34,10 @@ from game_constants import SCRIPT_START, SCRIPT_BEFORE_TASK, SCRIPT_AFTER_ITEM, 
 
 from test_utils import AudioPlayerMock, BehaviorManagerMock
 
-WORDS_FOLDER = NAO_FOLDER + WORDS_FOLDER_TEMPLATE.format(
-        SPEED_WORDS, PITCH_WORDS)
+NAO_WORDS_FOLDER_TEMPLATE = NAO_FOLDER + WORDS_FOLDER_TEMPLATE
 #WORDS_FOLDER = NAO_FOLDER + WORDS_NELLEKE
 #WORDS_FOLDER = NAO_FOLDER + WORDS_JUDITH
-INTERACTIONS_FOLDER = NAO_FOLDER + INTERACTIONS_FOLDER_TEMPLATE.format(
-        SPEED_INTERACTIONS, PITCH_INTERACTIONS)
+NAO_INTERACTIONS_FOLDER_TEMPLATE = NAO_FOLDER + INTERACTIONS_FOLDER_TEMPLATE
 
 UNKNOWN_WORDS = ["ear", "walk"]
 
@@ -47,8 +48,17 @@ DEBUG = True
 participant_id = None
 entrainment = None
 p_folder = None
+# Derived
+pitch_interactions = None
+speed_interactions = None
+pitch_words = None
+speed_words = None
+interactions_folder = None
+words_folder = None
 
-be_mngr = None
+# HOTFIX GLOBAL VARIABLES
+last_target_pitch = 240  # For issues with entrainment failures. 240 as is average value
+be_mngr = None # BEHAVIOR MANAGER - here for simplicity
 
 
 """
@@ -65,8 +75,6 @@ def find_word_file(word, words_folder, target_pitch):
     """
     Obtains the route to the word file from the word
     """
-    if not entrainment:
-       target_pitch = "base"
     return "{}/{}-{}.wav".format(words_folder, word, target_pitch)
     
 
@@ -112,11 +120,19 @@ def wait_for_kid(word = "", base_path = "", msg = ""):
         msg = "Waiting for {}. Press ENTER to continue".format(msg_word)
     target_pitch = None
     if base_path:
-        sample_width, audio_data = record_manual()
+        sample_width, audio_data = record_full_manual()
         mean_pitch = analyze_audio_data(base_path, audio_data, sample_width)
         if mean_pitch:
             target_pitch = round_and_bound_pitch(mean_pitch)
+            global last_target_pitch
+            last_target_pitch = target_pitch
+        else:
+            print("WARNING: Couldn't entrain")
+            target_pitch = last_target_pitch
+
     raw_input(msg) # Temporal solution
+    if not entrainment:
+       target_pitch = "base"
     return target_pitch
 
 
@@ -166,13 +182,13 @@ def find_start_interaction(scripts, n_interaction):
 
 
 def speak_start_experiment(aup):
-    folder = INTERACTIONS_FOLDER + "/start_experiment"
+    folder = interactions_folder + "/start_experiment"
     script = SCRIPT_START
     execute_interaction(script, aup, folder)
 
 
 def speak_before_task(aup, n_interaction):
-    folder = INTERACTIONS_FOLDER + "/before_task"
+    folder = interactions_folder + "/before_task"
     scripts = SCRIPT_BEFORE_TASK
     start_point = find_start_interaction(scripts, n_interaction)
     script = scripts[n_interaction]
@@ -185,7 +201,7 @@ def speak_after_item(aup, i_task, i_item):
         The internal array represents after which item the line is said.
         It assumes ALWAYS 2 lines after item
     """
-    folder = INTERACTIONS_FOLDER + "/during_task"
+    folder = interactions_folder + "/during_task"
     i_item_h = i_item +1 # "Human readable"
     scripts = SCRIPT_AFTER_ITEM
     if i_item_h in scripts[i_task]:
@@ -205,14 +221,14 @@ def speak_unknown(aup, n_interaction):
     """
     Disclaimer: This function has been done very hastily and hacky
     """
-    folder = INTERACTIONS_FOLDER + "/idk"
+    folder = interactions_folder + "/idk"
     # NOTE Because 0 is Practice
     start_point =  n_interaction -1 
     execute_interaction([1], aup, folder, start_point)
 
 
 def speak_after_task(aup, n_interaction):
-    folder = INTERACTIONS_FOLDER + "/after_task"
+    folder = interactions_folder + "/after_task"
     scripts = SCRIPT_AFTER_TASK
     start_point = find_start_interaction(scripts, n_interaction)
     script = scripts[n_interaction]
@@ -220,7 +236,7 @@ def speak_after_task(aup, n_interaction):
 
 
 def speak_finish_experiment(aup):
-    folder = INTERACTIONS_FOLDER + "/finish_experiment"
+    folder = interactions_folder + "/finish_experiment"
     script = SCRIPT_FINISH
     execute_interaction(script, aup, folder)
 
@@ -341,13 +357,29 @@ def set_configuration(p_data_folder):
     p_folder = abspath(join(p_data_folder,"id_{:0>3d}-entrainment_{}".format(
             participant_id, entrainment)))
     makedirs(p_folder) # At this point it shouldn't exist
+    
+    # Derived values
+    global pitch_interactions, speed_interactions, \
+            pitch_words, speed_words,\
+            interactions_folder, words_folder
+    if entrainment:
+        pitch_interactions = PITCH_INTERACTIONS_ENTRAINMENT
+    else:
+        pitch_interactions = PITCH_INTERACTIONS_CONTROL
+    pitch_words = PITCH_WORDS
+    speed_words = SPEED_WORDS
+    speed_interactions = SPEED_INTERACTIONS
+    interactions_folder = NAO_INTERACTIONS_FOLDER_TEMPLATE.format(
+            speed_interactions, pitch_interactions)
+    words_folder = NAO_WORDS_FOLDER_TEMPLATE.format(
+            speed_words, pitch_words)
 
 
 def main():
     # Parse properties
     f_tasks = FILENAME_TASKS
     p_data_folder = PARTICIPANTS_DATA_FOLDER
-    words_folder = WORDS_FOLDER
+#    words_folder = WORDS_FOLDER
 #    interactions_folder = INTERACTIONS_FOLDER
     ip = IP
     port = PORT
