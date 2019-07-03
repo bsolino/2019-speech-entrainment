@@ -25,7 +25,7 @@ NAO data
 PITCH_WORDS = 1
 #PITCH_WORDS = 1.15 # Literally doesn't work
 SPEED_WORDS = int(.75 * 100)
-PITCH_INTERACTIONS = 1.15
+PITCH_INTERACTIONS = 1.07
 #PITCH_INTERACTIONS = 1.00 # Test, for adaptation
 #SPEED_INTERACTIONS = .75 * 100
 SPEED_INTERACTIONS = 1 * 100
@@ -66,13 +66,42 @@ Interaction scripts
 """
 SCRIPT_START = [
         "animations/Stand/Emotions/Neutral/Hello_1",
-        3,
+        1.,
+        1,
+        "animations/Stand/Gestures/Me_2",
+        1,
+        "animations/Stand/Gestures/You_3",
+        0.1,
+        1,
         "wait",
-        5,
+        "animations/Stand/Emotions/Positive/Enthusiastic_1",
+        1,
+        0.3,
+        "animations/Stand/BodyTalk/Speaking/BodyTalk_14",
+        1,
+        "animations/Stand/Emotions/Positive/Excited_3",
+        1,
+        0.3,
+        "animations/Stand/BodyTalk/Speaking/BodyTalk_11",
+        0.5,
+        2,
         "wait",
-        5,
+        "animations/Stand/Gestures/Me_7",
+        2,
+        "animations/Stand/BodyTalk/Speaking/BodyTalk_2",
+        1,
+        "animations/Stand/BodyTalk/Thinking/Remember_1",
+        1,
+        "animations/Stand/Emotions/Positive/Excited_3",
+        1,
         "wait",
-        3
+        # Locked
+        "animations/Stand/BodyTalk/Speaking/BodyTalk_5",
+        1,
+        "animations/Stand/BodyTalk/Speaking/BodyTalk_21",
+        1,
+        "animations/Stand/Emotions/Neutral/Determined_1",
+        1
         ]
 SCRIPT_BEFORE_TASK = [
         [               # Practice round
