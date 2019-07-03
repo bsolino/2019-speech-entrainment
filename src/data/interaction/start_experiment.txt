@@ -19,5 +19,5 @@
 (wait)
 
 "Laten we eerst kijken hoe goed jouw Engels al is. Dan weet ik welke woorden ik jou kan leren."
-"Je mag nu met Judith de eerste test doen."
+"Je mag nu de eerste test doen met \\toi=lhp\\judit\\toi=orth\\."
 "Ik wacht hier op jou tot je terug bent. Daarna gaan we het spel spelen."
