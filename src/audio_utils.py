@@ -23,7 +23,9 @@ from pyaudio import PyAudio, paInt16, paComplete, paContinue
 import wave
 import numpy as np
 
-THRESHOLD = 700  # audio levels not normalised. # TODO Adjust value
+#THRESHOLD = 1400  # audio levels not normalised. # TODO Adjust value
+THRESHOLD = 640  # audio levels not normalised. # TODO Adjust value
+#THRESHOLD = 170
 RATE = 44100
 CHUNK_SIZE = 1024
 SILENT_CHUNKS = 1 * RATE // CHUNK_SIZE
@@ -38,7 +40,7 @@ THRESHOLD_REC = 10 # seconds
 
 
 
-def find_threshold():
+def find_threshold(rec_time = THRESHOLD_REC):
     p = PyAudio()
     stream = p.open(
             format=FORMAT,
@@ -48,7 +50,6 @@ def find_threshold():
             output=True,
             frames_per_buffer=CHUNK_SIZE
             )
-    rec_time = THRESHOLD_REC
 
     data_all = array('h')
     for i in range(0, RATE // CHUNK_SIZE * rec_time):
@@ -186,7 +187,7 @@ def record_automatic():
     return sample_width, data_all
 
 
-def record_manual():
+def record_semi_manual():
     """
     Record a word or words from the microphone and 
     return the data as an array of signed shorts.
