@@ -23,7 +23,7 @@ from pyaudio import PyAudio, paInt16, paComplete, paContinue
 import wave
 import numpy as np
 
-THRESHOLD = 500  # audio levels not normalised. # TODO Adjust value
+THRESHOLD = 700  # audio levels not normalised. # TODO Adjust value
 RATE = 44100
 CHUNK_SIZE = 1024
 SILENT_CHUNKS = 1 * RATE // CHUNK_SIZE
@@ -185,12 +185,72 @@ def record_automatic():
     data_all = normalize(data_all)
     return sample_width, data_all
 
+
 def record_manual():
     """
     Record a word or words from the microphone and 
     return the data as an array of signed shorts.
     """
 
+    stop = False
+    data_all = array('h')
+    def _callback_record(
+            in_data,            # recorded data if input=True; else None
+            frame_count,        # number of frames
+            time_info,          # dictionary
+            status_flags        # PaCallbackFlags:
+            ):
+        data_chunk = array('h', in_data)
+        if byteorder == 'big':
+            data_chunk.byteswap()
+        data_all.extend(data_chunk)
+        
+        if stop:
+            callback_flag = paComplete
+        else:
+            callback_flag = paContinue
+        
+        return in_data, callback_flag
+
+    p = PyAudio()
+    stream = p.open(
+            format=FORMAT,
+            channels=CHANNELS,
+            rate=RATE,
+            input=True,
+            output=True,
+            frames_per_buffer=CHUNK_SIZE,
+            stream_callback=_callback_record
+            )
+
+    stream.start_stream()
+    
+    raw_input("Press ENTER to stop recording")
+    stop = True
+    
+#    while stream.is_active():
+#        print("Still active")
+#        sleep(0.01)
+
+
+    sample_width = p.get_sample_size(FORMAT)
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+
+    data_all = trim(data_all)  # we trim before normalize as threshhold applies to un-normalized wave (as well as is_silent() function)
+    
+    data_all = normalize(data_all)
+    return sample_width, data_all
+
+
+def record_full_manual():
+    """
+    Record a word or words from the microphone and 
+    return the data as an array of signed shorts.
+    """
+    
+    raw_input("Press ENTER to START recording")
     stop = False
     data_all = array('h')
     def _callback_record(
@@ -254,6 +314,33 @@ def record_to_file(path, data, sample_width):
     wave_file.writeframes(data)
     wave_file.close()
 
+
+def play_file(path):
+    # open the file for reading.
+    wf = wave.open(path, 'rb')
+    
+    # create an audio object
+    p = PyAudio()
+    
+    # open stream based on the wave object which has been input.
+    stream = p.open(format =
+                    p.get_format_from_width(wf.getsampwidth()),
+                    channels = wf.getnchannels(),
+                    rate = wf.getframerate(),
+                    output = True)
+    
+    # read data (based on the chunk size)
+    data = wf.readframes(CHUNK_SIZE)
+    
+    # play stream (looping from beginning of file to the end)
+    while data != '':
+        # writing to the stream is what *actually* plays the sound.
+        stream.write(data)
+        data = wf.readframes(CHUNK_SIZE)
+    
+    # cleanup stuff.
+    stream.close()    
+    p.terminate()
 
 if __name__ == "__main__":
     find_threshold()
