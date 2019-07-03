@@ -130,23 +130,25 @@ def play_file(filename, target_freq, folder, aup):
 # ROBOT UTTERANCES
 
 def execute_interaction(script, aup, folder, start_point = 0):
-    i = start_point
-    for action in script:
+    i_sentence = start_point
+    for i_action in range(len(script)):
+        action = script[i_action]
         if type(action) is int:
             n_sentences = action
-            i_last_sentence = i + n_sentences
-            i += 1
-            for i in range(i, i_last_sentence+1):
-                audio_file = folder + "/{:0>2d}-base.wav".format(i)
-                print("Interaction {} of {}".format(i, i_last_sentence))
+            i_last_sentence = i_sentence + n_sentences
+            i_sentence += 1
+            for i_sentence in range(i_sentence, i_last_sentence+1):
+                audio_file = folder + "/{:0>2d}-base.wav".format(i_sentence)
+                print("Interaction {} of {}".format(
+                        i_sentence, i_last_sentence))
                 aup.playFile(audio_file)
-                if i < i_last_sentence:
+                if (i_action+1) < len(script) and script[i_action+1] != "wait":
                     print("Pausing")
                     sleep(0.7)
         elif action == "wait":
             wait_for_kid()
-        elif action == "pause":
-            sleep(0.7)  # TODO? Add variation?
+        elif type(action) is float:
+            sleep(action)
         else:
             # We assume that it'll be an animation address
             global be_mngr
