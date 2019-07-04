@@ -11,11 +11,11 @@ from os.path import join, isfile, isdir, basename
 from nao_utils import create_proxy, IP, PORT
 
 from game_constants import NAO_FOLDER, GENERATION_FOLDER, INTERACTIONS_FOLDER_TEMPLATE
-from game_constants import PITCH_INTERACTIONS_ENTRAINMENT, SPEED_INTERACTIONS, LANG_NL
+from game_constants import PITCH_INTERACTIONS_ENTRAINMENT, PITCH_INTERACTIONS_CONTROL, SPEED_INTERACTIONS, LANG_NL
 
 from test_utils import TextToSpeechMock
 
-PITCH = PITCH_INTERACTIONS_ENTRAINMENT
+#PITCH = PITCH_INTERACTIONS_ENTRAINMENT
 SPEED = SPEED_INTERACTIONS
 LANG = LANG_NL
 
@@ -132,24 +132,32 @@ def generate_interactions(tts, language, pitch, speed,
         retrieve_word_files(destination_folder)
 
 
+def generate_all_interactions(tts, language, pitch, speed,
+                          origin_folder, destination_folder_template):
+    for int_pitch in range(100, int(round(PITCH*100)+1)):
+        pitch = float(int_pitch)/100
+        print("{:.2f}".format(pitch))
+        generate_interactions(tts, language, pitch, speed,
+                              origin_folder, destination_folder_template)
+
 def main():
     # Parse properties
     origin_folder = INTERACTIONS_FOLDER
     destination_folder_template = DEST_FOLDER_TEMPLATE
     ip = IP
     port = PORT
-    pitch = PITCH
     speed = SPEED
     language = LANG
 
-
     tts = create_proxy("ALTextToSpeech", ip, port)
 #    tts = TextToSpeechMock
-    for int_pitch in range(100, int(round(PITCH*100)+1)):
-        pitch = float(int_pitch)/100
-        print("{:.2f}".format(pitch))
-        generate_interactions(tts, language, pitch, speed,
-                              origin_folder, destination_folder_template)
+    
+    pitch = PITCH_INTERACTIONS_CONTROL
+    generate_interactions(tts, language, pitch, speed,
+                          origin_folder, destination_folder_template)
+    pitch = PITCH_INTERACTIONS_ENTRAINMENT
+    generate_interactions(tts, language, pitch, speed,
+                          origin_folder, destination_folder_template)
 
 
 if __name__ == "__main__":
