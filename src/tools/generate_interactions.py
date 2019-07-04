@@ -11,11 +11,11 @@ from os.path import join, isfile, isdir, basename
 from nao_utils import create_proxy, IP, PORT
 
 from game_constants import NAO_FOLDER, GENERATION_FOLDER, INTERACTIONS_FOLDER_TEMPLATE
-from game_constants import PITCH_INTERACTIONS, SPEED_INTERACTIONS, LANG_NL
+from game_constants import PITCH_INTERACTIONS_ENTRAINMENT, SPEED_INTERACTIONS, LANG_NL
 
 from test_utils import TextToSpeechMock
 
-PITCH = PITCH_INTERACTIONS
+PITCH = PITCH_INTERACTIONS_ENTRAINMENT
 SPEED = SPEED_INTERACTIONS
 LANG = LANG_NL
 
@@ -145,7 +145,7 @@ def main():
 
     tts = create_proxy("ALTextToSpeech", ip, port)
 #    tts = TextToSpeechMock
-    for int_pitch in range(101, int(round(PITCH*100))):
+    for int_pitch in range(100, int(round(PITCH*100)+1)):
         pitch = float(int_pitch)/100
         print("{:.2f}".format(pitch))
         generate_interactions(tts, language, pitch, speed,
