@@ -62,3 +62,8 @@ class MotionMock:
     @staticmethod
     def rest():
         print("MotionMock: rest()")
+    
+    @staticmethod    
+    def setBreathEnabled(robot_part, enabled):
+        print("MotionMock: setBreathEnabled({}, {})".format(
+                robot_part, enabled))
