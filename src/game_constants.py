@@ -270,3 +270,76 @@ SCRIPT_FINISH = [
                 1,
                 "rest"
         ]
+
+
+
+"""
+BREAK RELATED DATA
+"""
+SCRIPT_BREAK = [
+        [
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_14",
+                1,
+                "wait",
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_21",
+                1,
+                "animations/Stand/Emotions/Positive/Excited_3",
+                1,
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_10",
+                1,
+                "animations/Stand/Gestures/You_3",
+                1,
+                "wait",
+                "animations/Stand/BodyTalk/Thinking/Remember_1",
+                1,
+                "animations/Stand/Gestures/You_5",
+                1,
+                "wait",
+                1,
+                "wait",
+                "animations/Stand/Waiting/Drink_1",
+                4.5,
+                1,
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_2",
+                1,
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_5",
+                1,
+                "animations/Stand/BodyTalk/Thinking/Remember_2",
+                1,
+                "animations/Stand/Gestures/Choice_1",
+                1,
+                "animations/Stand/Gestures/You_3",
+                1
+                ],
+        [
+                1
+                ],
+        [
+                "animations/Stand/Gestures/You_4",
+                1
+                ],
+        [
+                1
+                ],
+        [
+                "animations/Stand/Gestures/WhatSThis_14",
+                1
+                ],
+        [],
+        [
+                "animations/Stand/Gestures/WhatSThis_15",
+                1,
+                "wait",
+                "animations/Stand/Gestures/Me_7",
+                1,
+                "animations/Stand/Emotions/Neutral/Determined_1",
+                1
+                ]
+        ]
+SCRIPT_BREAK_BRANCHED_ANIMATIONS = [
+        "animations/Stand/Waiting/Monster_1",
+        "animations/Stand/Emotions/Neutral/Sneeze",
+        "animations/Stand/Waiting/Bandmaster_1"
+        ]
+# Index of the interactions where a break happens:
+SCRIPT_BREAK_BRANCHED_INTERACTIONS = [0, 2, 4]
