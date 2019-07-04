@@ -27,8 +27,8 @@
 
 
 # Task 3
-"Ik vind het leuk om met jou te oefenen."
-"Nu gaan we naar de volgende ronde. Pak het volgende boekje maar, en vertel me als je klaar bent om te beginnen."
+"We gaan beginnen met de derde ronde."
+"Pak het volgende boekje maar, en vertel me als je klaar bent om te beginnen."
 (wait)
 
 "Oké! Hier gaan we. Begin maar."
@@ -39,4 +39,4 @@
 "Pak alsjeblieft het laatste boekje en laat me weten als je er klaar voor bent."
 (wait)
 
-"Oké! Hier gaan we dan."
+"Oké! Hier gaan we dan. Je mag beginnen"

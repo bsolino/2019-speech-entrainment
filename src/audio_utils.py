@@ -23,8 +23,8 @@ from pyaudio import PyAudio, paInt16, paComplete, paContinue
 import wave
 import numpy as np
 
-#THRESHOLD = 1400  # audio levels not normalised. # TODO Adjust value
-THRESHOLD = 640  # audio levels not normalised. # TODO Adjust value
+THRESHOLD = 1400  # audio levels not normalised. # TODO Adjust value
+#THRESHOLD = 640  # audio levels not normalised. # TODO Adjust value
 #THRESHOLD = 170
 RATE = 44100
 CHUNK_SIZE = 1024

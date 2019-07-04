@@ -30,7 +30,9 @@ from game_constants import \
 # Entrainment
 from game_constants import MIN_PITCH, MAX_PITCH, ROUND_STEP
 # Interaction scripts
-from game_constants import SCRIPT_START, SCRIPT_BEFORE_TASK, INDICATOR_AFTER_ITEM, SCRIPT_AFTER_ITEM, SCRIPT_UNKNOWN, SCRIPT_AFTER_TASK, SCRIPT_FINISH 
+from game_constants import SCRIPT_START, SCRIPT_BEFORE_TASK, INDICATOR_AFTER_ITEM, SCRIPT_AFTER_ITEM, SCRIPT_UNKNOWN, SCRIPT_AFTER_TASK, SCRIPT_FINISH
+# Break-related data
+from game_constants import SCRIPT_BREAK, SCRIPT_BREAK_BRANCHED_ANIMATIONS, SCRIPT_BREAK_BRANCHED_INTERACTIONS
 
 from test_utils import AudioPlayerMock, BehaviorManagerMock, MotionMock
 
@@ -40,6 +42,7 @@ NAO_WORDS_FOLDER_TEMPLATE = NAO_FOLDER + WORDS_FOLDER_TEMPLATE
 NAO_INTERACTIONS_FOLDER_TEMPLATE = NAO_FOLDER + INTERACTIONS_FOLDER_TEMPLATE
 
 UNKNOWN_WORDS = ["ear", "walk"]
+#UNKNOWN_WORDS = [] # To deactivate unknowns
 
 #CONSTANTS
 DEBUG = True
@@ -130,8 +133,8 @@ def wait_for_kid(word = "", base_path = "", msg = ""):
         else:
             print("WARNING: Couldn't entrain")
             target_pitch = last_target_pitch
-
-    raw_input(msg) # Temporal solution
+    else:
+        raw_input(msg) # Temporal solution
     if not entrainment:
        target_pitch = "base"
     return target_pitch
@@ -167,9 +170,13 @@ def execute_interaction(script, aup, folder, start_point = 0):
         elif type(action) is float:
             sleep(action)
         elif action == "rest":
+            print("Resting")
             motion.rest()
+            motion.setBreathEnabled("Body", False)
         elif action == "wake up":
+            print("Waking up")
             motion.wakeUp()
+            motion.setBreathEnabled("Body", True)
         else:
             # We assume that it'll be an animation address
             global be_mngr
@@ -250,6 +257,63 @@ def speak_finish_experiment(aup):
     execute_interaction(script, aup, folder)
 
 
+def speak_break(aup):
+    folder = interactions_folder + "/break/"
+    scripts = SCRIPT_BREAK
+    animations = [a for a in SCRIPT_BREAK_BRANCHED_ANIMATIONS]
+    branching_interactions = SCRIPT_BREAK_BRANCHED_INTERACTIONS
+    
+    n_interaction = 0
+    while n_interaction < len(scripts):
+        script = scripts[n_interaction]
+        starting_point = find_start_interaction(scripts, n_interaction)
+        
+        print("Start break part {}".format(n_interaction+1))
+        execute_interaction(script, aup, folder, starting_point)
+        
+        print("Finish break part {}".format(n_interaction+1))
+        
+        if n_interaction in branching_interactions:
+            selection = None
+            if len(animations) > 0:
+                if len(animations) > 1:
+                    while not selection:
+                        msg = "Select animation:\n"
+                        for i in range(len(animations)):
+                            msg += "{}: {}\n".format(i+1, animations[i])
+                        selection_input =  raw_input(msg)
+                        if selection_input:
+                            try:
+                                selection = int(selection_input)
+                            except ValueError:
+                                print("ERROR: {} is not a valid integer".format(
+                                        selection_input))
+                        if selection <= 0 or selection > len(animations):
+                            selection = None
+                        else:
+                            selection -= 1
+                            break
+                    animation = animations.pop(selection)
+                else:
+                    print("Last Animation")
+                    animation = animations.pop()
+                
+                
+                n_interaction += 1
+                
+                script = scripts[n_interaction]
+                starting_point = find_start_interaction(scripts, n_interaction)
+                
+                execute_interaction(script, aup, folder, starting_point)
+                be_mngr.runBehavior(animation)
+        n_interaction += 1
+            
+        
+    
+    
+    
+
+
 # TASKS
 
 def execute_task(task, i_task, aup, words_folder):
@@ -275,13 +339,25 @@ def execute_tasks(list_tasks, aup, words_folder):
     
     speak_start_experiment(aup)
     
+    # Artificially change the pitch, to simulate entrainment
+    # TODO Clean hack
+    if entrainment:
+        global pitch_interactions, interactions_folder
+        pitch_interactions = PITCH_INTERACTIONS_ENTRAINMENT
+        interactions_folder = NAO_INTERACTIONS_FOLDER_TEMPLATE.format(
+                speed_interactions, pitch_interactions)
+    
     for i in range(n_tasks):
-
+        # TODO Hotfix
+        if i == 3:
+            raw_input("Press ENTER to start break")
+            speak_break(aup)
         
         task = list_tasks[i]
         print("Starting task {}/{}; category: {}".format(
                 i+1, n_tasks, task.category))
         raw_input("Press ENTER to continue")
+
 
         speak_before_task(aup, i)
         
@@ -371,10 +447,11 @@ def set_configuration(p_data_folder):
     global pitch_interactions, speed_interactions, \
             pitch_words, speed_words,\
             interactions_folder, words_folder
-    if entrainment:
-        pitch_interactions = PITCH_INTERACTIONS_ENTRAINMENT
-    else:
-        pitch_interactions = PITCH_INTERACTIONS_CONTROL
+#    if entrainment:
+#        pitch_interactions = PITCH_INTERACTIONS_ENTRAINMENT
+#    else:
+#        pitch_interactions = PITCH_INTERACTIONS_CONTROL
+    pitch_interactions = PITCH_INTERACTIONS_CONTROL
     pitch_words = PITCH_WORDS
     speed_words = SPEED_WORDS
     speed_interactions = SPEED_INTERACTIONS

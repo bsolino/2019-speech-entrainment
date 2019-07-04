@@ -53,6 +53,10 @@ class BehaviorManagerMock:
     @staticmethod
     def startBehavior(route):
         print("BehaviorManagerMock: startBehavior(\"{}\")".format(route))
+    
+    @staticmethod
+    def runBehavior(route):
+        print("BehaviorManagerMock: runBehavior(\"{}\")".format(route))
 
 class MotionMock:
     @staticmethod
@@ -62,3 +66,8 @@ class MotionMock:
     @staticmethod
     def rest():
         print("MotionMock: rest()")
+    
+    @staticmethod    
+    def setBreathEnabled(robot_part, enabled):
+        print("MotionMock: setBreathEnabled({}, {})".format(
+                robot_part, enabled))
