@@ -1,0 +1,38 @@
+"Zullen we nu even een korte pauze nemen van het spel? Dan kan ik je nog iets vertellen over mijn vakantie."
+(wait)
+
+"Toen ik op vakantie ging, ben ik met de boot over de zee gevaren.
+"Dat was heel spannend!"
+"Het water was heel mooi. Ik houd van water, maar ik kan niet zwemmen."
+"Kan jij zwemmen?"
+(wait)
+
+"Oke. Ik heb een idee. In Engeland drinken mensen veel thee."
+"Drink jij wel eens thee?"
+(wait)
+
+"Ik wil ook thee leren drinken. Kan jij laten zien hoe dat moet?"
+(wait)
+
+"Zo?"
+"Ik kan het nog niet zo goed."
+"Ik heb ook maar drie vingers! Ik denk dat ik nog even moet oefenen."
+"Ik weet nog iets leuks dat ik je wil laten zien."
+"Je mag kiezen wat je eerst wil zien: ik kan een monster spelen, een dirigent, of ik kan niesen."
+"Wat wil je als eerste zien?"
+(wait)
+
+"Oke!"
+#animation 1
+"Wat wil je nu zien?"
+(wait)
+
+"Oke!"
+#animation 2
+"Oke, dan nu de laatste."
+#animation 3
+"Vond je dat leuk?"
+(wait)
+
+"Ik ook!"
+"Oke. Nu is het weer tijd om verder te gaan met het spel."
