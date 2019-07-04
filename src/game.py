@@ -167,9 +167,13 @@ def execute_interaction(script, aup, folder, start_point = 0):
         elif type(action) is float:
             sleep(action)
         elif action == "rest":
+            print("Resting")
             motion.rest()
+            motion.setBreathEnabled("Body", False)
         elif action == "wake up":
+            print("Waking up")
             motion.wakeUp()
+            motion.setBreathEnabled("Body", True)
         else:
             # We assume that it'll be an animation address
             global be_mngr
@@ -250,6 +254,8 @@ def speak_finish_experiment(aup):
     execute_interaction(script, aup, folder)
 
 
+
+
 # TASKS
 
 def execute_task(task, i_task, aup, words_folder):
@@ -274,6 +280,14 @@ def execute_tasks(list_tasks, aup, words_folder):
     n_tasks = len(list_tasks)
     
     speak_start_experiment(aup)
+    
+    # Artificially change the pitch, to simulate entrainment
+    # TODO Clean hack
+    if entrainment:
+        global pitch_interactions, interactions_folder
+        pitch_interactions = PITCH_INTERACTIONS_ENTRAINMENT
+        interactions_folder = NAO_INTERACTIONS_FOLDER_TEMPLATE.format(
+                speed_interactions, pitch_interactions)
     
     for i in range(n_tasks):
 
@@ -371,10 +385,11 @@ def set_configuration(p_data_folder):
     global pitch_interactions, speed_interactions, \
             pitch_words, speed_words,\
             interactions_folder, words_folder
-    if entrainment:
-        pitch_interactions = PITCH_INTERACTIONS_ENTRAINMENT
-    else:
-        pitch_interactions = PITCH_INTERACTIONS_CONTROL
+#    if entrainment:
+#        pitch_interactions = PITCH_INTERACTIONS_ENTRAINMENT
+#    else:
+#        pitch_interactions = PITCH_INTERACTIONS_CONTROL
+    pitch_interactions = PITCH_INTERACTIONS_CONTROL
     pitch_words = PITCH_WORDS
     speed_words = SPEED_WORDS
     speed_interactions = SPEED_INTERACTIONS
