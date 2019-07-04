@@ -68,6 +68,7 @@ PORT = 9559
 Interaction scripts
 """
 SCRIPT_START = [
+        "wake up",
         "animations/Stand/Emotions/Neutral/Hello_1",
         1.,
         1,
@@ -98,16 +99,17 @@ SCRIPT_START = [
         "animations/Stand/Emotions/Positive/Excited_3",
         1,
         "wait",
-        # Locked
         "animations/Stand/BodyTalk/Speaking/BodyTalk_5",
         1,
         "animations/Stand/BodyTalk/Speaking/BodyTalk_21",
         1,
         "animations/Stand/Emotions/Neutral/Determined_1",
-        1
+        1,
+        "rest"
         ]
 SCRIPT_BEFORE_TASK = [
         [               # Practice round
+                "wake up",
                 "animations/Stand/Emotions/Positive/Happy_4",
                 1,
                 "animations/Stand/BodyTalk/Speaking/BodyTalk_12",
@@ -234,11 +236,12 @@ SCRIPT_AFTER_TASK = [
                 1
                 ],    
         [               # Task 3
-                0.8, #finish first sentence before starting animation
                 "animations/Stand/Emotions/Positive/Excited_1",
+                0.8, #finish first sentence before starting animation
                 1
                 ],    
         [               # Task 4
+                0.7,
                 "animations/Stand/Emotions/Positive/Enthusiastic_1",
                 1
                 ],    
@@ -264,5 +267,6 @@ SCRIPT_FINISH = [
                 "animations/Stand/BodyTalk/Speaking/BodyTalk_21",
                 1,
                 "animations/Stand/Emotions/Neutral/Hello_1",
-                1
+                1,
+                "rest"
         ]
