@@ -30,7 +30,7 @@ from game_constants import \
 # Entrainment
 from game_constants import MIN_PITCH, MAX_PITCH, ROUND_STEP
 # Interaction scripts
-from game_constants import SCRIPT_START, SCRIPT_BEFORE_TASK, SCRIPT_AFTER_ITEM, SCRIPT_AFTER_TASK, SCRIPT_FINISH 
+from game_constants import SCRIPT_START, SCRIPT_BEFORE_TASK, INDICATOR_AFTER_ITEM, SCRIPT_AFTER_ITEM, SCRIPT_UNKNOWN, SCRIPT_AFTER_TASK, SCRIPT_FINISH 
 
 from test_utils import AudioPlayerMock, BehaviorManagerMock, MotionMock
 
@@ -208,18 +208,20 @@ def speak_after_item(aup, i_task, i_item):
     """
     folder = interactions_folder + "/during_task"
     i_item_h = i_item +1 # "Human readable"
+    indicators = INDICATOR_AFTER_ITEM
     scripts = SCRIPT_AFTER_ITEM
-    if i_item_h in scripts[i_task]:
+    if i_item_h in indicators[i_task]:
         wait_for_kid(msg = "Waiting for robot to stop talking")
         i_line = 0
-        for script_i_task in range(i_task +1):
-            script = scripts[script_i_task]
-            if script_i_task == i_task:
-                i_line += script.index(i_item_h)
+        for indicator_i_task in range(i_task +1):
+            indicator = indicators[indicator_i_task]
+            if indicator_i_task == i_task:
+                i_line += indicator.index(i_item_h)
             else:
-                i_line += len(script)
+                i_line += len(indicator)
+            script = scripts[i_line]
         print("I line {}".format(i_line))
-        execute_interaction([2], aup, folder, i_line*2) # SUPER HACKY!!
+        execute_interaction(script, aup, folder, i_line*2) # SUPER HACKY!!
 
 
 def speak_unknown(aup, n_interaction):
@@ -229,7 +231,9 @@ def speak_unknown(aup, n_interaction):
     folder = interactions_folder + "/idk"
     # NOTE Because 0 is Practice
     start_point =  n_interaction -1 
-    execute_interaction([1], aup, folder, start_point)
+    scripts = SCRIPT_UNKNOWN
+    script = scripts[start_point]
+    execute_interaction(script, aup, folder, start_point)
 
 
 def speak_after_task(aup, n_interaction):

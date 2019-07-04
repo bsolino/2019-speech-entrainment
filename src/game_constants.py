@@ -108,34 +108,60 @@ SCRIPT_START = [
         ]
 SCRIPT_BEFORE_TASK = [
         [               # Practice round
-                3,
+                "animations/Stand/Emotions/Positive/Happy_4",
+                1,
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_12",
+                1,
+                "animations/Stand/Gestures/ShowFloor_1",
+                1,             
                 "wait",
-                2
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_14",
+                1,
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_10",
+                1
                 ],
         [               # Task 1
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_11",
                 1,
                 "wait",
-                2,
+                "animations/Stand/Gestures/ShowFloor_1",
+                1,
+                "animations/Stand/Gestures/Me_3",
+                1,
                 "wait",
+                "animations/Stand/Gestures/Coaxing_1",
                 1
                 ],
         [               # Task 2
+                0.5,
+                "animations/Stand/Gestures/ShowFloor_1",
                 1,
                 "wait",
+                "animations/Stand/Emotions/Positive/Enthusiastic_1",
                 1
                 ],
         [               # Task 3
-                2,
+                "animations/Stand/Gestures/Explain_3",
+                1,
+                1.0,
+                "animations/Stand/Gestures/You_5",
+                1,
                 "wait",
+                "animations/Stand/Emotions/Neutral/Determined_1",
                 1
                 ],
         [               # Task 4
-                2,
+                "animations/Stand/Gestures/Explain_2",
+                1,
+                "animations/Stand/Gestures/You_4",
+                1,
                 "wait",
+                "animations/Stand/Gestures/Coaxing_2",
                 1
                 ]
         ]
-SCRIPT_AFTER_ITEM = [
+# Marks if there is an utterance after an item
+INDICATOR_AFTER_ITEM = [
         [1, 2],    # Practice
         [],
         [],
@@ -147,15 +173,96 @@ SCRIPT_AFTER_ITEM = [
 #        [6],            # Task 3
 #        [7]             # Task 4
         ]
+
+"""
+NOTE! This is different from the others. There is a script for each time
+"speak_after_item()" is called. Those calls are marked in
+"INDICATOR_AFTER_ITEM"
+"""
+SCRIPT_AFTER_ITEM = [
+        [
+                "animations/Stand/Emotions/Positive/Happy_4",
+                1,
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_21",
+                1
+                ],
+        [
+                    "animations/Stand/Emotions/Positive/Enthusiastic_1",
+                    1,
+                    "animations/Stand/Gestures/Explain_3",
+                    1
+                    ]
+        ]
+
+"""
+NOTE! This script has the same special behavior as SCRIPT_AFTER_ITEM
+"""
+SCRIPT_UNKNOWN = [
+        #1st idk
+        [
+                "animations/Stand/Emotions/Neutral/Confused_1",
+                1
+                ],
+        #2nd idk
+        [
+                 "animations/Stand/Waiting/ScratchHead_1",
+                1
+                ],
+        #3rd idk
+        [
+                 "animations/Stand/Waiting/Think_1",
+                1
+                ],
+        #4th idk
+        [
+                 "animations/Stand/Waiting/Think_4",
+                1
+                ]
+        ]
+
 SCRIPT_AFTER_TASK = [
-        [1],     # Practice - Nothing
-        [1],    # Task 1
-        [1],    # Task 2
-        [1],    # Task 3
-        [1]     # Task 4
+        [               #Practice
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_21",
+                1
+                ],
+        [               # Task 1
+                "animations/Stand/Emotions/Positive/Enthusiastic_1",
+                1
+                ],    
+        [               # Task 2
+                "animations/Stand/Emotions/Positive/Happy_4",
+                1
+                ],    
+        [               # Task 3
+                0.8, #finish first sentence before starting animation
+                "animations/Stand/Emotions/Positive/Excited_1",
+                1
+                ],    
+        [               # Task 4
+                "animations/Stand/Emotions/Positive/Enthusiastic_1",
+                1
+                ],    
         ]
 SCRIPT_FINISH = [
-        5,
-        "wait",
-        4
+                "animations/Stand/Gestures/You_5",
+                1,
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_12",
+                1,
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_6",
+                1,
+                "animations/Stand/Emotions/Positive/Happy_4",
+                1,
+                "animations/Stand/Gestures/You_3",
+                1,
+                "wait",
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_9",
+                1,
+                0.5,
+                "animations/Stand/Gestures/Me_4",
+                1,
+                0.2,
+                "animations/Stand/BodyTalk/Speaking/BodyTalk_21",
+                1,
+                "animations/Stand/Emotions/Neutral/Hello_1",
+                1
         ]
