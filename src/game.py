@@ -41,8 +41,8 @@ NAO_WORDS_FOLDER_TEMPLATE = NAO_FOLDER + WORDS_FOLDER_TEMPLATE
 #WORDS_FOLDER = NAO_FOLDER + WORDS_JUDITH
 NAO_INTERACTIONS_FOLDER_TEMPLATE = NAO_FOLDER + INTERACTIONS_FOLDER_TEMPLATE
 
-UNKNOWN_WORDS = ["ear", "walk"]
-#UNKNOWN_WORDS = [] # To deactivate unknowns
+#UNKNOWN_WORDS = ["ear", "walk"]
+UNKNOWN_WORDS = [] # To deactivate unknowns
 
 #CONSTANTS
 DEBUG = True
@@ -136,7 +136,8 @@ def wait_for_kid(word = "", base_path = "", msg = ""):
     else:
         raw_input(msg) # Temporal solution
     if not entrainment:
-       target_pitch = "base"
+#       target_pitch = "base"
+        target_pitch = "130"
     return target_pitch
 
 
