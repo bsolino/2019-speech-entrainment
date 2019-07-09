@@ -9,6 +9,9 @@ Created on Wed Jun  5 02:48:37 2019
 from os import listdir, makedirs
 from os.path import join, abspath, exists
 from shutil import rmtree
+
+import traceback
+
 from nao_utils import create_proxy, IP, PORT
 #from word_list_utils import parse_file
 from task_utils import read_task_lists
@@ -65,14 +68,6 @@ be_mngr = None # BEHAVIOR MANAGER - here for simplicity
 motion = None
 
 
-"""
-Hacks to Silence PyAudio warnings
-"""
-
-import sys
-sys.stderr = open(join("return","logfile.txt"), 'ab')
-
-
 # UTILS
 
 def find_word_file(word, words_folder, target_pitch):
@@ -101,9 +96,15 @@ def input_boolean(msg, default = False):
 def analyze_audio_data(base_path, audio_data, sample_width):
     audio_file = base_path + ".wav"
     features_file = base_path + ".txt"
-    record_to_file(audio_file, audio_data, sample_width)
-    extract_features(audio_file, features_file)
-    return parse_mean_pitch(features_file)
+    try:
+        record_to_file(audio_file, audio_data, sample_width)
+        extract_features(audio_file, features_file)
+        return parse_mean_pitch(features_file)
+    except Exception:
+        print("Exception analyzing data:")
+        traceback.print_exc()
+        print("Returning \"None\" as entrainment value")
+        return None
 
 
 def round_and_bound_pitch(x):
@@ -124,14 +125,22 @@ def wait_for_kid(word = "", base_path = "", msg = ""):
         msg = "Waiting for {}. Press ENTER to continue".format(msg_word)
     target_pitch = None
     if base_path:
-        sample_width, audio_data = record_full_manual()
-        mean_pitch = analyze_audio_data(base_path, audio_data, sample_width)
+        try:
+            sample_width, audio_data = record_full_manual()
+            mean_pitch = analyze_audio_data(
+                    base_path, audio_data, sample_width)
+        except:
+            print("Exception recording audio:")
+            traceback.print_exc()
+            print("Will use \"None\" as entrainment value")
+            mean_pitch = None
         if mean_pitch:
             target_pitch = round_and_bound_pitch(mean_pitch)
             global last_target_pitch
             last_target_pitch = target_pitch
         else:
-            print("WARNING: Couldn't entrain")
+            print("WARNING: Couldn't entrain, using last value: {}".format(
+                    last_target_pitch))
             target_pitch = last_target_pitch
     else:
         raw_input(msg) # Temporal solution
@@ -463,7 +472,11 @@ def set_configuration(p_data_folder):
 
 
 def check_audio():
-    find_threshold(1)
+    threshold = find_threshold(1)
+    if not threshold > 0:
+        raise ValueError(
+                "Found a Threshold of {}. Mic is off".format(threshold))
+    
 
 
 def main():
