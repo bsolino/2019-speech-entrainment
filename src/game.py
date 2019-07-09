@@ -68,14 +68,6 @@ be_mngr = None # BEHAVIOR MANAGER - here for simplicity
 motion = None
 
 
-"""
-Hacks to Silence PyAudio warnings
-"""
-
-import sys
-sys.stderr = open(join("return","logfile.txt"), 'ab')
-
-
 # UTILS
 
 def find_word_file(word, words_folder, target_pitch):
