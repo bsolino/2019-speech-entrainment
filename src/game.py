@@ -337,6 +337,7 @@ def execute_task(task, i_task, aup, words_folder):
                 i_task+1, i+1, word)
         results_path = join(p_folder, results_name)
         target_pitch = wait_for_kid(word, results_path)
+        sleep(.7)
         if word in UNKNOWN_WORDS:
             speak_unknown(aup, i_task)
         else:
