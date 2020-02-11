@@ -173,11 +173,12 @@ def execute_interaction(script, aup, folder, start_point = 0):
                         i_sentence, i_last_sentence))
                 aup.playFile(audio_file)
                 if (i_action+1) < len(script) and script[i_action+1] != "wait":
-                    print("Pausing")
+                    print("Pausing 0.7 seconds")
                     sleep(0.7)
         elif action == "wait":
             wait_for_kid()
         elif type(action) is float:
+            print("Extra pause "+str(action))
             sleep(action)
         elif action == "rest":
             print("Resting")
